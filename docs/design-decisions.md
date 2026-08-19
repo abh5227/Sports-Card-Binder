@@ -1,7 +1,9 @@
 # Design decisions
 
 The settled visual direction, and **why**. This is the source of record for decisions that
-would otherwise live only in planning conversation.
+would otherwise live only in planning conversation. Not everything here is settled: entries
+marked **provisional** are decided on the best evidence available and expected to be revisited
+once the thing exists — see below.
 
 Conclusions without their reasoning get re-litigated by whoever next thinks the code looks
 wrong. So every entry here carries the argument, the alternatives that lost, and — where
@@ -26,14 +28,40 @@ Three kinds, in descending order of how much weight they carry:
 - **Reasoned** — argued from principle without building. The weakest kind. This file
   contains one that was confidently wrong.
 
-| decision                                | decided by  | how                                  |
-| --------------------------------------- | ----------- | ------------------------------------ |
-| Bare at rest, information on hover      | **Andy**    | looked, at true scale                |
-| The player name stays in the reveal     | **Andy**    | looked — overruled a measurement     |
-| Contextual near-duplicate marking: dead | **Andy**    | ruled against both of us             |
-| Scrim over rail or side panel           | Claude Code | built all three, then looked         |
-| Area cost at the worst case             | Claude Code | built it; neither of us predicted it |
-| Set-name capacity                       | Claude Code | measured, 1,210 real names           |
+| decision                                  | status      | decided by  | how                                  |
+| ----------------------------------------- | ----------- | ----------- | ------------------------------------ |
+| Bare at rest — nothing added to the card  | settled     | **Andy**    | looked, at true scale                |
+| Information on hover rather than always   | provisional | **Andy**    | looked; awaiting real use            |
+| The player name stays in the reveal       | settled     | **Andy**    | looked — overruled a measurement     |
+| Contextual near-duplicate marking: dead   | settled     | **Andy**    | ruled against both of us             |
+| Scrim over rail or side panel             | settled     | Claude Code | built all three, then looked         |
+| Area cost at the worst case               | settled     | Claude Code | built it; neither of us predicted it |
+| Set-name capacity                         | settled     | Claude Code | measured, 1,210 real names           |
+| Specular for occupied, lit for empty      | settled     | **Andy**    | looked — neither of us proposed it   |
+| The lit sleeve destroys a card's boundary | settled     | Claude Code | measured, per edge, per treatment    |
+| The card's lit edge returns, directional  | settled     | Claude Code | measured a Round 1 deferral false    |
+| The bottom edge that no well can fix      | settled     | Claude Code | built two diagnostics to find out    |
+
+### Settled versus provisional — pending real use
+
+**Settled** means decided and not to be reopened without new evidence. **Provisional** means
+decided on the best evidence available and *expected* to be revisited once the thing exists.
+
+The distinction exists because **every decision in this file so far was judged on a preview of
+nine cards.** Real use means a collection of hundreds, sorted and re-sorted, over weeks. Some
+of these will hold and some will not, and the two cannot be told apart from here.
+
+Marking a decision provisional is what makes reopening it cheap. Without the marker, revisiting
+a settled-looking decision reads as relitigating something already argued, and the cost of that
+appearance is that it does not get revisited at all.
+
+> **Provisional — the hover reveal.** Information appearing on hover rather than always.
+> Andy: *"i believe i agree with the hover as well but will see how i like it when implemented
+> / after some use."*
+
+Note what is **not** provisional: *bare at rest* was judged by looking at real cards at true
+scale, and nothing about a larger collection changes it. Only the *hover* half is pending —
+whether reaching for information is right in daily use, as opposed to right on a preview page.
 
 **The name in the reveal is the entry worth understanding.** A measurement found 7 of 9
 player names legible on the card itself at 150 px, which argued for leaving the name out as
@@ -174,9 +202,176 @@ Do not build it.
 
 ---
 
+## Round 2 — the pocket
+
+**Question:** should the pocket carry the interface's weight, and can it solve the dark-card
+boundary Round 1 deferred to it?
+
+**Settled:**
+
+- **Specular-only for occupied pockets.** The well is the page colour exactly. The plastic is
+  evidenced only by what plastic does: a raking specular, the mouth where the two films
+  separate, welded side seams. Nothing sits between the card and the page.
+- **The lit sleeve for empty pockets.** A lifted, graded inner face — the treatment that lost
+  everywhere a card was present.
+- **The card's own lit edge returns**, and it is **directional**: bright top-left, dark
+  bottom-right.
+
+### Why the two states get different treatments — this is not a compromise
+
+The two-treatment answer was Andy's, and neither the planner nor Claude Code proposed it. It is
+principled rather than split-the-difference, on two independent grounds.
+
+**The failure mode does not exist in the empty case.** The lit sleeve failed because it
+destroyed the boundary *of a card*. An empty pocket has no card. Applying the losing treatment
+where the thing it damages is absent is not an inconsistency — it is the scope of the finding
+being read correctly.
+
+**It is also what actually happens.** An empty sleeve is two films with air between and the
+page showing through. A filled one is opaque where the card is. Light gets through exactly
+where a card would block it, so the two states genuinely look different in reality. The
+interface is not switching styles; it is rendering two different physical situations.
+
+**And it resolves what the build left unfinished.** The specular-only empty pocket was reported
+as *faint, quiet, not yet convincing* — and it was faint **because** it was specular-only. That
+treatment is a compromise struck against a card that is not there. The lit well is right for
+the one case where nothing competes with it.
+
+### The limit of the two-state answer — it addresses the boundary, not salience
+
+Recorded here, beside the decision, because Round 1 set this precedent with *the limit of that
+defence*: **a decision recorded without its known limit is how a future session inherits a rule
+whose justification quietly fails.** A reader of this decision must meet the limit here, not
+three sections later.
+
+**The two-state answer is correct on the question it was chosen to settle.** The lit sleeve
+failed because it destroyed the boundary *of a card*; an empty pocket has no card. That argument
+holds and nothing below weakens it.
+
+**Salience is a separate axis, and the argument does not reach it.** In the four-pocket cluster
+the lit empty pocket was the brightest object on screen — the eye went to the hole rather than
+to the cards. That has nothing to do with whether a card is present, so the reasoning that
+licenses the two-state answer leaves it entirely untouched.
+
+**The inversion is the case to watch.** Twenty cards at 9-pocket leaves a last page of two cards
+and seven empties. Seven lit pockets and two cards could read as *a page of empties with two
+intruders* rather than as a page with a tail — the emptiness announcing itself instead of the
+collection.
+
+**Andy saw this before it was written.** It was put to him as a caveat against his own call
+rather than recorded on Claude Code's authority, and he ruled it in — here as a limit, and again
+as a Round 3 carry, on the grounds that a real page is where it can actually be settled.
+
+> **The planner's proposed resolution — reasoning, and therefore the weakest kind of entry in
+> this file.** The lit sleeve was tuned against a lone pocket in isolation, where it had to be
+> bright enough to register with nothing around it. Surrounded by cards it needs far less. On
+> that reading this is a **calibration performed in the wrong context**, not a wrong treatment,
+> and Round 3 on a real page is the right context to tune it in. Nothing has been built to test
+> this; it is an expectation, not a finding.
+
+### The lit sleeve destroys the boundary it was built to create
+
+Rendered boundary step, near-black card (Jones, 2023 Panini Prizm Blue Wave), measured per edge
+from the rendered pixels at true scale:
+
+| treatment     | left       | bottom | top        |
+| ------------- | ---------- | ------ | ---------- |
+| no sleeve     | **3.37:1** | 1.15:1 | 3.48:1     |
+| film          | 3.24:1     | 1.12:1 | 3.34:1     |
+| lit sleeve    | 2.16:1     | 1.01:1 | 3.48:1     |
+| physical      | **1.89:1** | 1.01:1 | 4.85:1     |
+| specular only | 3.27:1     | 1.14:1 | **6.42:1** |
+
+**The lit inner face makes the dark card worse, in proportion to how lit it is.** The model was
+upside down, not mistuned. Jones's left edge is L 0.146 — *brighter* than every well built, so
+lifting the well moves it **toward** the card and closes the gap rather than opening one.
+
+Raising the well also costs the light-bordered card: Durant's left boundary falls from 11.33:1
+to 6.28:1. No visible harm at that magnitude, but the direction is the same for every card
+brighter than the well, which is nearly all of them.
+
+### The bottom edge cannot be fixed by any well
+
+1.15:1 with no sleeve, 1.01:1 at full strength, 1.14:1 with the card's drop shadow removed. Two
+diagnostics were built specifically to find out why, and the answer is not tuning:
+
+> **Light from the upper left puts shadow exactly where the lit surface was needed.**
+
+The bottom edge is the shadow side by construction. A lit well cancels there no matter how
+bright it is. This is a property of the light direction, not of the treatment, so no setting of
+this mechanism reaches it.
+
+### The Round 1 deferral was wrong, and it was measured wrong
+
+Round 1 deferred the card's own lit edge on the theory that the pocket would supply it. **The
+pocket cannot.** The only edge any sleeve improved was the top, and that improvement came from
+the *lip* — a line on the card's own edge — not from the well. A diagnostic with the well set
+to the page colour exactly beat every lit sleeve on every measurement.
+
+**The lit edge returns, with one qualification that saves most of the original worry.** It must
+be **directional** — bright top-left, dark bottom-right — not a uniform stroke. A uniform
+control was built to test precisely this and lost even on the dark card (3.13:1 against 3.48:1
+at the top edge).
+
+Directionality is what buys **artwork-adaptivity for free**, which is what the Round 2 principle
+demanded. On a white-bordered card the bright top-left line lands on cream and vanishes; no
+doubled edge appeared in any treatment. A uniform stroke would have to be tuned against artwork
+it cannot see, which is the fault the principle was written to prevent.
+
+### Three places, not two — the corrected rule
+
+The planner's position going into Round 2 was that interface weight belongs **outside** the card
+boundary, because the page is controlled and the artwork is not. Half of that is right, and the
+dichotomy is missing its most useful term.
+
+Right: **nothing should sit between the card and the page.** Every well built degraded every
+card, and the degradation scaled with strength. That is now measured rather than asserted.
+
+> There are **three** places, not two: **over the artwork**, **on the boundary**, and **out on
+> the page**. The lip is the third, and it is privileged — it is the only one that is about the
+> *relationship* between card and page rather than about either side.
+
+**And "constant by construction" is false.** A boundary is a **ratio**, so a constant term on
+one side of it is not constant in effect. Lifting the well from L 0.008 to 0.055 is a fixed
+absolute change; it takes the dark card's left boundary from 3.37:1 to 1.89:1 and the light
+card's from 11.33:1 to 6.28:1. The page you control is one operand. The artwork you do not
+control is the other, and it is always in the expression.
+
+### Premise corrections found by measuring before building
+
+All three were carried in good faith from earlier rounds and all three were wrong:
+
+- **Crosby is not a near-black card.** Its border is silver, L 0.54–0.64, an 11.7:1 step against
+  the page. What is dark is its *bottom third* — which is why it was the right card for the
+  Round 1 scrim test and the wrong one here. Same card, different region, different question.
+- **Nash and Judge carry crop-defect black on two edges each** — retained scan background at
+  L 0.003. That is a sourcing artifact, not a card property, and it inflates their measured
+  dissolve to ~50% of perimeter. Judging a sleeve against those is judging it against a bar of
+  black. Both were excluded.
+- **Real dissolve is 2 of 7 clean images, and never a whole outline.** Jones at 20% of perimeter
+  below 1.5:1 against the page, McGaffigan at 12%, the other five at 0%. The problem is real and
+  it is *partial* — worth fixing, not worth over-fitting to.
+
+### The z-order rule
+
+Found only with the reveal and the sleeve edge on screen at once, and findable no other way: the
+card's lit edge stopped where the reveal started, so a card's boundary was continuous on three
+sides and interrupted for the bottom 30% of the fourth — precisely on the dark cards where it was
+doing the work.
+
+> **The card's edge is the card's. The reveal is a label laid inside it, and a label never
+> truncates the object it labels.**
+
+Applies to anything later drawn within a card's bounds, not only the reveal.
+
+---
+
 ## Carried forward
 
-### Deferred to Round 2 — the card's own lit edge
+The Round 1 entries below are kept **with their original reasoning intact** so that the
+prediction and the outcome can be read against each other. Neither was edited after the fact.
+
+### Resolved at Round 2 — the card's own lit edge
 
 Dark-bordered cards dissolve into the surface behind them; their edges stop reading. A 1px
 lit hairline on the card was proposed and **deliberately not built**.
@@ -187,7 +382,13 @@ Adding an interface edge now risks carrying a redundant one forever.
 
 **If the sleeve does not fix it, the hairline returns with evidence.**
 
-### Principle for Round 2 — the interface's weight must not depend on the artwork
+> **Outcome: the sleeve did not fix it, and the reasoning above is wrong at its centre rather
+> than at its margin.** It named the sleeve's specular edge as the source of the boundary. The
+> source is the plastic **tenting over the card's own edge** — a line *on* the boundary, not a
+> surface beside it. Everything the deferral then concluded followed correctly from a premise
+> about the wrong object. The lit edge returns, directional. See **Round 2 — the pocket**.
+
+### Resolved at Round 2 — the interface's weight must not depend on the artwork
 
 Two instances of the same fault are already on record, pointing opposite ways:
 
@@ -198,6 +399,58 @@ Two instances of the same fault are already on record, pointing opposite ways:
 
 Whatever the pocket does, it should hold roughly constant apparent weight across a chrome
 refractor, a matte common and a black-bordered modern card.
+
+> **Outcome: the principle held and the proposed means of satisfying it did not.** No fixed
+> well can satisfy it, because a boundary is a ratio. What satisfies it is **directionality** —
+> a bright top-left line lands on cream and vanishes, lands on black and does the work, with no
+> knowledge of the artwork required. See **Three places, not two**.
+
+### Carried to Round 3 — two kinds of empty pocket
+
+Both get the lit sleeve. They differ **only in labelling**, which is a Round 3 question, not a
+treatment question. Agreed with Andy.
+
+- **Ghost slots** — cards in a set's checklist that Andy does not own. **Set-completion mode
+  only.** Andy's rule, and it independently confirms the earliest design finding that ghost
+  slots contradict binder order. In every other sort there are no blanks; cards pack.
+- **The tail** — 20 cards at 9-pocket means the third page holds two cards and seven empty
+  pockets. This happens in *every* mode, because a binder page has nine pockets whether or not
+  they are full.
+
+**A ghost slot knows which card is missing. A tail pocket does not.** That difference is the
+whole of the labelling problem.
+
+### Carried to Round 3 — the unresolved bottom edge
+
+Dark cards' bottom edges measure 1.14:1 against the page in the settled treatment, and no well
+can improve it. The open question is whether the **grid** supplies it: on a full page, a card's
+bottom edge is adjacent to the *next row's top lip*, which is the bright side of the
+directional edge.
+
+Not testable on a single pocket. If the grid does supply it, nothing more is needed; if not,
+the bottom edge needs its own answer.
+
+### Carried to Round 3 — banding risk from the directional edge
+
+Bright-top and dark-bottom on every card, repeated down three rows, may read as **horizontal
+banding** across the page rather than as per-card lighting. The cue that works in isolation is
+the cue that repeats, and repetition is what a page adds.
+
+### Carried to Round 3 — salience of the lit empty pocket
+
+The stated limit of the Round 2 decision, carried to where it can be settled. On a page, does
+the lit empty pocket sit quietly among cards, or does it pull the eye to the gaps? And does the
+last page of a set invert — seven lit pockets and two cards reading as a page of empties?
+
+**Tune the empty pocket's brightness on a real page, not on a lone pocket.** The current setting
+was calibrated in isolation, where it had to be bright to register at all. Settled together with
+the entry below, which is the same test from the other side.
+
+### Carried to Round 3 — test a partly-filled page, not a single empty pocket
+
+Every empty-pocket judgement in Round 2 was made on one pocket alone, or a cluster of four. A
+single faint pocket reads as noise; nine read as structure. **The empty-pocket treatment is not
+finally judged until it is seen on a real page with some pockets filled and some not.**
 
 ### Carried to Round 3 — the long-case overhang
 

@@ -21,7 +21,8 @@ not track where a card physically lives.
 
 - [`docs/design-decisions.md`](docs/design-decisions.md) — the settled visual direction and
   the reasoning behind it, including the alternatives that lost and the limits of the
-  arguments that won. Read it before changing anything about how a card is presented.
+  arguments that won. Read it before changing anything about how a card **or its pocket** is
+  presented. It marks which decisions are **provisional** — do not treat those as fixed.
 
 ---
 
