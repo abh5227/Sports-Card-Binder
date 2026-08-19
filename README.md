@@ -1,5 +1,7 @@
 # Sports Card Binder
 
+[![CI](https://github.com/abh5227/Sports-Card-Binder/actions/workflows/ci.yml/badge.svg)](https://github.com/abh5227/Sports-Card-Binder/actions/workflows/ci.yml)
+
 A personal sports-card collection app, built around a single idea: **the interface should
 be a binder, not a spreadsheet.**
 

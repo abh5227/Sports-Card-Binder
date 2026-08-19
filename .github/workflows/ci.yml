@@ -1,0 +1,139 @@
+# The cold start belongs to the machine, not to a human ritual.
+#
+# The `cold-start` job runs EXACTLY what README.md tells a stranger to run, on a
+# clean checkout, and then proves the result actually serves. If the README drifts
+# from reality, this goes red — which is the entire point.
+#
+# Why it is mechanised: Chef's Choice's README documents a cold start that cannot
+# work (it omits the frontend build, so / returns 500). Its CLAUDE.md even
+# annotates the gap. Nobody noticed for six weeks, on a project run with more
+# discipline than most. A human-performed install ritual is precisely the check
+# that already failed.
+#
+# The weekly schedule matters as much as the push trigger: a cold start rots from
+# upstream change, not from commits, so a repo with no pushes can still break.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Mondays 07:00 UTC — catches upstream rot in a repo nobody has pushed to.
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  cold-start:
+    name: Cold start from a clean checkout
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # No dependency cache here, deliberately. This job impersonates a stranger
+      # with an empty machine; a warm cache would be a different experiment.
+      # better-sqlite3@13 ships a prebuilt linux-x64 binary, so there is no
+      # node-gyp step and nothing to compile — npm 11's allow-scripts warning
+      # about it is noise in this context.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      # --- exactly what README.md says, in order -----------------------------
+      - name: npm install
+        run: npm install
+
+      - name: npm run build
+        run: npm run build
+
+      # `npm start` never exits, so it cannot be a plain step. Start it, wait for
+      # the port, and assert the app is genuinely serving — not merely that a
+      # process launched. BINDER_DATA_DIR is left UNSET on purpose: the default
+      # path is what a stranger gets, so the default is what gets tested.
+      - name: npm start, and prove it serves
+        run: |
+          set -euo pipefail
+          npm start &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+
+          for _ in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:8787/api/health -o health.json; then break; fi
+            sleep 1
+          done
+
+          echo "--- /api/health ---"
+          cat health.json
+          echo
+
+          test "$(jq -r .ok health.json)" = "true"
+          test "$(jq -r .node health.json)" != "null"
+          test "$(jq -r .sqlite health.json)" != "null"
+
+          # The collection must never resolve inside the repository.
+          data_dir="$(jq -r .dataDir health.json)"
+          echo "data directory: $data_dir"
+          case "$data_dir" in
+            *Sports-Card-Binder*) echo "::error::data directory resolved INSIDE the repo"; exit 1 ;;
+          esac
+
+          # And the built frontend is actually being served, not just the API.
+          curl -fsS http://127.0.0.1:8787/ | grep -q '<div id="app">'
+          echo "cold start OK"
+
+      # Crude, but it targets the exact failure this job exists to prevent: a
+      # README that stops describing what CI runs. It cannot catch a NEW required
+      # step being added to the README, only a documented one disappearing.
+      - name: README still documents these commands
+        run: |
+          set -euo pipefail
+          for cmd in "npm install" "npm run build" "npm start"; do
+            grep -qF -- "$cmd" README.md || {
+              echo "::error::README.md no longer documents '$cmd', which CI runs"; exit 1; }
+          done
+
+  checks:
+    name: Typecheck, lint, tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      # Builds and serves the app itself (see playwright.config.ts webServer), so
+      # this is a second, deeper cold start: a real browser against the real build.
+      - name: End-to-end tests
+        run: npm run test:e2e
+
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
