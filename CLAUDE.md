@@ -17,6 +17,12 @@ It is an **idealised** binder. Every card renders identically in a pocket. Grade
 magnetic one-touch holders and other physical storage are not modelled, and the app does
 not track where a card physically lives.
 
+## Read this too
+
+- [`docs/design-decisions.md`](docs/design-decisions.md) — the settled visual direction and
+  the reasoning behind it, including the alternatives that lost and the limits of the
+  arguments that won. Read it before changing anything about how a card is presented.
+
 ---
 
 ## Where things live
