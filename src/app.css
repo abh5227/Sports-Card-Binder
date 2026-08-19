@@ -1,0 +1,29 @@
+/* Placeholder styling only. The real design direction — the binder as a
+   photographed object — arrives with the binder UI in a later stage. These
+   tokens are the ones the design brief settled on, so the scaffold already
+   looks like this project rather than a framework default. */
+:root {
+	--desk: #1a1d21; /* the surface the binder sits on */
+	--binder: #0d0f12; /* nylon binder body */
+	--page: #171a1f; /* the page insert behind the pockets */
+	--ink: #e8e4dc; /* warm off-white — card stock, not pure white */
+	--ink-dim: #8b8880;
+	--ledger: #a8845c; /* muted brass — rings, old checklist ink */
+
+	color-scheme: dark;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	display: grid;
+	place-items: center;
+	background: var(--desk);
+	color: var(--ink);
+	font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif;
+	-webkit-font-smoothing: antialiased;
+}

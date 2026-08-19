@@ -24,10 +24,10 @@ not track where a card physically lives.
 **Code lives here. Data does not.** This repository is public; the collection is
 personal and irreplaceable. They never share a directory.
 
-|                | Location                                                 |
-| -------------- | -------------------------------------------------------- |
-| Repository     | `~/Developer/Sports-Card-Binder`                          |
-| Data directory | `$BINDER_DATA_DIR`, default `~/Developer/binder-data/`    |
+|                | Location                                               |
+| -------------- | ------------------------------------------------------ |
+| Repository     | `~/Developer/Sports-Card-Binder`                       |
+| Data directory | `$BINDER_DATA_DIR`, default `~/Developer/binder-data/` |
 
 `BINDER_DATA_DIR` holds the SQLite database, cached card images and any exports. It is
 an **environment variable with a default, not a hardcoded path** — the app must never
@@ -152,6 +152,23 @@ virtualising.
 - **Biome over SonarQube** — SonarQube's differentiated value is duplication analysis and
   coverage policy across teams. This is single-user, no auth, no network exposure.
 - **Node 24** — Node 20 is past EOL (2026-04-30) and `better-sqlite3@13` requires `>=22`.
+
+**TypeScript is pinned to `~6.0.3`, not 7.** TypeScript 7 (the native compiler) is
+released and `tsc --noEmit` passes on it, but `svelte-check@4.7.6` declares
+`typescript: "^5.0.0 || ^6.0.0"` and refuses to run against 7 without also installing 6
+under an npm alias plus a `--tsgo` flag. TS 7's benefit is compile speed, which is
+irrelevant at this size; the reason TypeScript is here is the tier boundary, which 6
+expresses identically. Revisit when svelte-check supports 7 directly.
+
+**The server runs straight from `.ts` source** — `node server/index.ts`. Node 24 *strips*
+types rather than compiling them, so syntax needing a real transform (`enum`, `namespace`,
+parameter properties) fails at runtime. `tsconfig.json` sets `erasableSyntaxOnly` and
+`verbatimModuleSyntax` so the compiler rejects that syntax instead of it reaching runtime.
+
+**Biome cannot see inside a `.svelte` template.** It parses only the `<script>` block, so
+`correctness/noUnusedVariables` false-flags every variable used solely in markup. It is
+turned off for `**/*.svelte` in `biome.json`; `svelte-check` covers those files instead.
+Do not "fix" the warning by deleting a variable the template uses.
 
 ---
 

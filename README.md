@@ -18,12 +18,43 @@ built to grow to a few thousand cards.
 
 ## Setup
 
-Arrives with the toolchain in the next commit. Whatever appears here is what CI runs from
-a clean checkout on every push — if these instructions stop working, the build goes red.
+Requires **Node 24 or newer** (`better-sqlite3` needs ≥22; Node 20 is past end of life).
 
-That is deliberate. A cold start that only a human verifies is a cold start that quietly
-rots; this project has a documented case of exactly that happening and going unnoticed
-for six weeks.
+```bash
+npm install
+npm run build     # Vite builds the frontend into dist/, which the server serves
+npm start         # http://127.0.0.1:8787
+```
+
+That is the whole cold start. **CI runs exactly these commands from a clean checkout on
+every push** — if they stop working, the build goes red.
+
+That is deliberate. A cold start only a human verifies is one that quietly rots; this
+project has a documented case of exactly that going unnoticed for six weeks.
+
+### Developing
+
+Two processes, so the frontend gets hot reload:
+
+```bash
+npm run dev:server   # API on :8787, restarts on change
+npm run dev          # frontend on :5173 with HMR, proxies /api to :8787
+```
+
+### Checks
+
+```bash
+npm run typecheck             # tsc + svelte-check
+npm run lint                  # Biome
+npm test                      # Vitest — unit
+npx playwright install chromium
+npm run test:e2e              # Playwright — builds, serves, drives a real browser
+```
+
+The server runs straight from TypeScript source; Node 24 strips the types, so there is no
+separate build step for it. `tsconfig.json` sets `erasableSyntaxOnly` so the compiler
+rejects any syntax that would need a real transform, rather than leaving that as a rule to
+remember.
 
 ## Your data lives outside this repository
 
