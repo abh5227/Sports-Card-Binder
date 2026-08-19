@@ -352,6 +352,32 @@ All three were carried in good faith from earlier rounds and all three were wron
   below 1.5:1 against the page, McGaffigan at 12%, the other five at 0%. The problem is real and
   it is *partial* — worth fixing, not worth over-fitting to.
 
+> **CORRECTED 2026-08-19 at Round 3. The second and third bullets above are half wrong. They
+> are kept as written, because the point of this file is to show how conclusions moved.**
+>
+> **Nash was genuinely defective.** 21 rows of retained scan background at the bottom, 14
+> columns at the right. Re-cropped, its dissolved perimeter falls from **52% to 3%**.
+>
+> **Judge never was.** Its dark top and right are the card's own navy Bowman keyline. Its light
+> left and bottom are the card's white border showing because **the cut is off-centre** — a
+> normal physical property of a trading card, and one a real collection is full of.
+>
+> **Why the error, which is the reusable part.** The Round 2 detector took the **mean RGB** of
+> each edge and converted that to luminance. That statistic collapses three different things
+> into the same suspicious number: a genuinely dark border, a bright border, and a bar of scan
+> background. A **percentile** test separates them, because a scan bar is a line where *almost
+> every* pixel is black rather than one whose average is low — `p95 < 0.012` across the line.
+> Reach for a percentile whenever the question is *"is this line uniformly X"* rather than
+> *"what is this line on average"*.
+>
+> **Corrected figure: 3 of 9 genuinely dissolving, not 2 of 7.** Judge at **49% of perimeter**
+> is worse than anything Round 2 believed was real.
+>
+> **This does not reopen Round 2.** More dissolve than believed strengthens the case for the
+> directional lip rather than weakening it, and the sleeve decision was Andy's on separate
+> grounds — the failure mode does not exist in an empty pocket, and the two states differ
+> physically. Nothing above depended on the dissolve being small.
+
 ### The z-order rule
 
 Found only with the reveal and the sleeve edge on screen at once, and findable no other way: the
