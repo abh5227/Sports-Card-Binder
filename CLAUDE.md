@@ -172,6 +172,31 @@ types rather than compiling them, so syntax needing a real transform (`enum`, `n
 parameter properties) fails at runtime. `tsconfig.json` sets `erasableSyntaxOnly` and
 `verbatimModuleSyntax` so the compiler rejects that syntax instead of it reaching runtime.
 
+**A custom property containing `var()` is substituted where it is DECLARED, not where it is
+used.** This silently half-works, and the half that works disguises the half that does not.
+
+Deriving layout from a scale factor looks like it should work:
+
+```css
+:root { --k: 1; --card-w: calc(150px * var(--k)); }
+.spread { --k: 2; }              /* intends: everything doubles */
+```
+
+It does not. `--card-w` is substituted at computed-value time **on `:root`**, using `:root`'s
+`--k`, and inherits downward already frozen at 150px. Meanwhile a real property written as
+`font-size: calc(9px * var(--k))` resolves `var(--k)` **on the element itself** and correctly
+reads 2. The result was type at double size inside a card that had not grown.
+
+**Why this one is dangerous rather than merely annoying:** the symptom looks like the *design
+rule* failing — "proportional scaling doesn't work" — rather than the implementation failing.
+It was caught only by measuring the rendered card width against the intended one.
+
+> **Derived geometry must be declared on the same element that sets the scale factor**, not on
+> an ancestor. Put the whole derivation in a class and apply that class wherever `--k` is set.
+
+If a scale-dependent value ever looks wrong, measure the rendered box before touching the rule
+that produced it.
+
 **Biome cannot see inside a `.svelte` template.** It parses only the `<script>` block, so
 `correctness/noUnusedVariables` false-flags every variable used solely in markup. It is
 turned off for `**/*.svelte` in `biome.json`; `svelte-check` covers those files instead.
