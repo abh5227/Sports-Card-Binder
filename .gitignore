@@ -1,0 +1,68 @@
+# This repository is PUBLIC. Nothing personal may ever reach it.
+#
+# The application's data — database, cached card images, exports — lives OUTSIDE
+# this repo entirely, in $BINDER_DATA_DIR (default ~/Developer/binder-data/).
+# The rules below are the second line of defence, not the first.
+
+# --- the collection itself: irreplaceable, personal, never committed ----------
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+*.sqlite
+*.sqlite3
+binder-data/
+/data/
+
+# Cached and normalised card images. Sourced from the web, re-derivable, and
+# large. Andy's own card photographs are personal and must never be committed.
+/images/
+/card-images/
+/image-cache/
+*.heic
+*.HEIC
+
+# --- secrets ------------------------------------------------------------------
+# There are none yet. When a pricing-API token arrives it is an environment
+# variable, never a file in the tree. On a public repo a committed token is a
+# live credential leak, not a mistake you can quietly fix in a later commit.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+
+# --- build output and dependencies -------------------------------------------
+node_modules/
+dist/
+build/
+.vite/
+*.tsbuildinfo
+
+# --- test and tooling artefacts ----------------------------------------------
+coverage/
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+playwright/.cache/
+
+# --- local tool state ---------------------------------------------------------
+# .claude/ holds per-machine permissions, not project config. Project guidance
+# lives in CLAUDE.md at the repo root, which IS committed — a clone must carry
+# the operating rules with it.
+.claude/
+.vscode/
+.idea/
+
+# --- OS noise -----------------------------------------------------------------
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+
+# --- logs ---------------------------------------------------------------------
+*.log
+npm-debug.log*
