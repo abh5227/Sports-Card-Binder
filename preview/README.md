@@ -24,6 +24,15 @@ the record points at, in a public document, silently.
 > `round3c-opacity.html` rather than one file revised three times: each is the thing that was
 > looked at when a particular decision was taken.
 
+**One exception, and it is narrow.** A committed preview may be corrected **only where the
+correction cannot change what it renders, and cannot move what any citation points at.**
+Dead CSS with no emitter, and an emitted class with no rule, both qualify — removing them
+changes no pixel and no line anyone points at. Anything that could change either becomes a
+new file.
+
+That keeps the protection where it earns its keep — provenance and citations — without
+freezing sixteen files against ever being cleaned.
+
 This is also why `preview/` is excluded from the formatter in `biome.json`. **The exclusion
 protects the citations, not the code style.** A formatter is only the most obvious tool with
 write access here — the same applies to a codemod, an auto-fixer, or a well-meaning edit.
