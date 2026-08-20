@@ -1,112 +1,47 @@
 <script lang="ts">
-/* Stage B placeholder. It exists to prove one thing: the toolchain is connected
-     end to end. Svelte 5 runes compile, Vite builds, the Node server serves the
-     build, and the SQLite connection in $BINDER_DATA_DIR actually opens.
+/* The binder. Every locked decision from Rounds 1-5, in the real stack.
 
-     There is no binder here yet, and deliberately so. */
+   This is a port of preview/locked.html, not a redesign — the preview is what was
+   judged and this has to reproduce it. Cards are hardcoded fixtures; there is no
+   schema yet and nothing here reads the API. */
 
-type Health = {
-	ok: boolean;
-	node: string;
-	sqlite: string;
-	dataDir: string;
-	databaseFile: string;
-};
+import { buildSpreads, FOUR_POCKET_OPENER } from "./lib/binder/cards.ts";
+import Spread from "./lib/binder/Spread.svelte";
 
-let health = $state<Health | null>(null);
-let error = $state<string | null>(null);
-
-$effect(() => {
-	fetch("/api/health")
-		.then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
-		.then((data: Health) => {
-			health = data;
-		})
-		.catch((e: Error) => {
-			error = e.message;
-		});
-});
+const nine = buildSpreads(9, 6);
+const four = buildSpreads(4, 6, FOUR_POCKET_OPENER);
 </script>
 
 <main>
   <h1>Sports Card Binder</h1>
-  <p class="stage">Stage B — scaffold. No schema, no binder, no cards yet.</p>
 
-  {#if error}
-    <p class="bad" data-testid="health-error">API unreachable: {error}</p>
-  {:else if health}
-    <dl data-testid="health">
-      <dt>node</dt>
-      <dd>{health.node}</dd>
-      <dt>sqlite</dt>
-      <dd>{health.sqlite}</dd>
-      <dt>data directory</dt>
-      <dd>{health.dataDir}</dd>
-    </dl>
-    <p class="ok" data-testid="health-ok">Toolchain connected end to end.</p>
-  {:else}
-    <p class="dim">Checking…</p>
-  {/if}
+  <section data-testid="binder-nine">
+    <h2>9-pocket — browsing</h2>
+    <Spread spreads={nine} k={1} cols={3} label="9-pocket" />
+  </section>
+
+  <section data-testid="binder-four">
+    <h2>4-pocket — display</h2>
+    <Spread spreads={four} k={2} cols={2} label="4-pocket" />
+  </section>
 </main>
 
 <style>
   main {
-    max-width: 34rem;
-    padding: 2.5rem;
-    text-align: left;
+    max-width: 1560px;
+    margin: 0 auto;
+    padding: 34px 26px 120px;
   }
-
   h1 {
-    margin: 0 0 0.25rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-  }
-
-  .stage {
-    margin: 0 0 2rem;
-    color: var(--ink-dim);
-    font-size: 0.875rem;
-  }
-
-  dl {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.4rem 1.25rem;
-    margin: 0 0 1.5rem;
-    padding: 1rem 1.25rem;
-    background: var(--page);
-    border-radius: 3px;
-    font-size: 0.8125rem;
-  }
-
-  dt {
-    color: var(--ink-dim);
+    font: 600 20px/1.2 var(--cond);
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.6875rem;
-    align-self: center;
+    margin: 0 0 6px;
   }
-
-  dd {
-    margin: 0;
-    font-family: ui-monospace, SFMono-Regular, monospace;
-    word-break: break-all;
-  }
-
-  .ok {
-    margin: 0;
-    color: var(--ledger);
-    font-size: 0.8125rem;
-  }
-
-  .bad {
-    color: #c46a5a;
-    font-size: 0.875rem;
-  }
-
-  .dim {
-    color: var(--ink-dim);
-    font-size: 0.875rem;
+  h2 {
+    font: 600 14px/1.2 var(--cond);
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    margin: 54px 0 6px;
   }
 </style>

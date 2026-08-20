@@ -1,14 +1,25 @@
-/* Placeholder styling only. The real design direction — the binder as a
-   photographed object — arrives with the binder UI in a later stage. These
-   tokens are the ones the design brief settled on, so the scaffold already
-   looks like this project rather than a framework default. */
+/* The design tokens, settled across Rounds 1-5 and recorded with their contrast
+   ratios in docs/design-decisions.md. Do not adjust a colour here without reading
+   that file — several of these were chosen against a specific measured failure. */
 :root {
 	--desk: #1a1d21; /* the surface the binder sits on */
-	--binder: #0d0f12; /* nylon binder body */
 	--page: #171a1f; /* the page insert behind the pockets */
-	--ink: #e8e4dc; /* warm off-white — card stock, not pure white */
-	--ink-dim: #8b8880;
-	--ledger: #a8845c; /* muted brass — rings, old checklist ink */
+	--ink: #e8e4dc; /* 13.34:1 on desk — AAA */
+	--ledger: #a8845c; /* 4.93:1 on desk — AA  */
+	--ink-dim: #9a968e; /* 5.74:1 on desk — AA  */
+
+	--scrim: rgba(8, 9, 11, 0.9); /* 90% — the show-through is deliberate */
+	--scrim-edge: rgba(232, 228, 220, 0.18);
+
+	--well: #20242a; /* empty pocket, dimmed to ~40% of Round 2's lift */
+	--well-hi: 0.06;
+	--well-rim: 0.085;
+
+	--dur: 420ms; /* the page turn, settled by looking over runs of flips */
+
+	--cond:
+		"Avenir Next Condensed", "HelveticaNeue-CondensedBold", "Roboto Condensed", ui-sans-serif,
+		system-ui, sans-serif;
 
 	color-scheme: dark;
 }
@@ -17,13 +28,27 @@
 	box-sizing: border-box;
 }
 
+html,
 body {
 	margin: 0;
-	min-height: 100vh;
-	display: grid;
-	place-items: center;
 	background: var(--desk);
 	color: var(--ink);
 	font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif;
 	-webkit-font-smoothing: antialiased;
+}
+
+button {
+	font: 600 10px / 1 var(--cond);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--ink);
+	background: #252a31;
+	border: 1px solid #343a43;
+	border-radius: 3px;
+	padding: 8px 13px;
+	cursor: pointer;
+}
+
+button:hover {
+	background: #2e343c;
 }
