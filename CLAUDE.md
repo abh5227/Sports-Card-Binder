@@ -341,6 +341,63 @@ which is the behaviour this rule exists to protect.
 > invites agreement instead of checking, which is the exact failure a diagnostic is for. Cite
 > `file:line` in this repo, or restate the substance inline.
 
+## The decision log ships with this repo
+
+**Andy's decision: the decision log becomes public.** It moves into this repository at
+Stage C and ships with the public repo.
+
+**Why, and it is not sentiment.** This repository is a portfolio piece, and the log is the
+strongest artifact in it. Working code is table stakes and every candidate has some. A
+record of decisions with the alternatives that lost, positions overturned by measurement,
+and errors caught before they cost anything is the thing that is hard to fake and rare to
+find. `docs/design-decisions.md` is already that document for the visual design; the log is
+that document for the project.
+
+**Nothing about this changes what stays out.** No database, no card images, no holdings, no
+tokens — that rule is unrelated to this one and is not relaxed by it. What ships is
+reasoning, not data.
+
+### It stays current by the mechanism that already exists
+
+Do not invent a process for this. The machinery is the one that caught the Round 4 record:
+
+- **a decision's prompt names the log update as one of its outputs**, in its own right,
+  never buried in a list of prohibitions
+- **the next prompt's verify section checks that output**, the same way it checks any other
+  claimed artefact
+
+That is the whole mechanism, and it works because it makes the update a checkable claim
+rather than an intention. **"Keep it updated" as an intention is exactly what left Chef's
+Choice's `README.md` broken for six weeks** on a project run with more discipline than most
+— see the cold-start section below, which exists because of it. An intention that nobody
+verifies decays at a rate nobody notices.
+
+### One authoritative copy, owned here
+
+Once the log is in this repository, **Claude Code owns it** and this is the only live copy.
+Any copy held elsewhere becomes a pointer to this one.
+
+This is the same transition already made for `docs/design-decisions.md`, and it is made for
+the same reason: **two live copies of a decision record is how they diverge**, and the
+divergence is silent until someone acts on the stale one. A pointer cannot go stale.
+
+### Three things to do before it ships — Stage C
+
+Not a rewrite. Three read-throughs, each with one specific question.
+
+1. **What made sense in a private planning document and does not in a public repo.**
+   Machine-specific paths, filesystem detail, anything describing Andy's setup rather than
+   the project's decisions.
+2. **Every reference to material held outside this repository must be made self-contained.**
+   The log's header points at a private planning document, and several entries cite it by
+   number. A public document referencing a private one reads as a broken dependency, and it
+   also leaks the shape of the thing being kept private. Restate the principle inline at
+   each citation rather than pointing at a source no reader can open — which is the citation
+   rule above, applied to the log itself.
+3. **Anything personal that is not a decision.** The same rule as the rest of the repo,
+   applied once more at the moment of publication, because that is the last point at which
+   it is cheap.
+
 ## The cold start belongs to CI
 
 Whatever `README.md` tells a stranger to run is what CI runs, from a clean checkout.
