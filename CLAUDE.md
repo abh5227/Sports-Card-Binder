@@ -133,6 +133,38 @@ A spike measured real card scans in real pockets in headful Chrome on this hardw
 If you are about to add any of these, the numbers above say you are solving a problem
 this app does not have. Re-measure before overriding.
 
+### Measure against this machine's idle floor, never a nominal frame budget
+
+A 120 Hz display implies an 8.33 ms budget. **Do not compare anything against 8.33 ms.**
+Measure what `requestAnimationFrame` does on this machine with nothing animating, in the
+same run, and judge the work against *that*.
+
+**Observed 2026-08-19/20**, headful Chromium 151.0.7922.34 via Playwright 1.62, built-in
+Liquid Retina XDR at 120 Hz: idle rAF ran **8.30 ms median, 9.30–9.40 ms worst** across many
+runs. Roughly 40% of frames already exceeded 8.33 ms while the page sat perfectly still.
+
+> **Those numbers are shown to make the point, not to be compared against.** They are a
+> dated observation of one machine on one browser build, and the rule above is *measure the
+> floor in the same run*. A future session that diffs its results against 8.30 ms has
+> committed the error this section exists to prevent, using this section's own evidence to
+> do it. Measure the floor; do not look it up.
+
+This is not hypothetical. A first pass at the page-turn variants reported *127 of 310
+frames over budget* and a 9.4 ms worst frame — for **all four** variants, including the
+pure cross-fade, which animates one opacity and nothing else. **Four identical results
+across four different workloads is a measurement of the environment, not of the work.**
+Against the idle floor the same runs show zero dropped frames.
+
+Two corollaries, both learned the same way:
+
+- **Headful Chromium only — the requirement is headful, not a particular browser.**
+  Headless Chromium does not composite on a real display clock, so its frame deltas are not
+  comparable to anything in the table above, including the 36.7 ms already on record.
+- **Detach the instrument before trusting the timing.** A CDP screencast running during a
+  turn produced a single 158 ms frame that disappeared the moment the screencast was
+  removed. When a measurement needs pixels, capture pixels in one run and time in another;
+  never in the same one.
+
 **Two caveats, so the numbers are not over-read.** The pocket derivative is still worth
 generating — for *disk* (230 MB vs 1.2 GB across the collection), not for frame time. And
 a single scrolling document of 3,000 cards *did* jank; the binder flips rather than
