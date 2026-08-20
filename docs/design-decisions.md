@@ -653,10 +653,22 @@ Four frames, all at the settled page geometry, all shown at true scale:
 | ------- | ------------------------------------------------------------------ | ---------- |
 | A       | pages only — two sheets, a spine gap, nothing else                 | 16 px      |
 | B       | pages, a thin surrounding board, a recessed spine, no rings        | **40 px**  |
-| C       | the full binder — body, spine, rings, punched pages                | 96 px      |
-| D       | no board; the current spread punched, with the *other pages* edges | 52 px      |
+| C       | the full binder — body, spine, rings, punched pages                | 100 px     |
+| D       | no board; the current spread punched, with the *other pages* edges | 59 px      |
 
 **Frame cost** is screen width spent on everything that is not a page, at 9-pocket.
+
+> **CORRECTED 2026-08-20 at Stage C.** This table first recorded C at 96 px, D at 52 px, and
+> the spine below at 16 px. All three were read off `:root` defaults rather than off the
+> variant that was actually built, and all three were wrong. Measured from the rendered
+> frames: C is **100 px**, D is **59 px**, and B's spine is **18 px**. The original numbers
+> are replaced rather than kept, because unlike a wrong *argument* a wrong *measurement*
+> teaches nothing by being preserved — but the mistake is kept here, because its shape
+> recurs: **reading a value from a base rather than from the thing that was judged.**
+>
+> B's own 40 px was right, and it was the evidence: 11 px of board on each side plus an
+> 18 px spine is 40. With the 16 px this file claimed, the same row would have read 38.
+> **The table contradicted the prose two rows apart and nobody noticed for two rounds.**
 
 ### Settled: B, the minimal frame — 40 px
 
@@ -728,8 +740,10 @@ governs ghost slots, arriving from the other direction — see **two kinds of em
 
 ### Resolved here: the two carried Round 3 margin questions
 
-- **The spine gap depends on the page gutter.** Settled at **16 px** in B, chosen against
-  the 2 px gutter rather than in isolation, with the board's own recess around it. It
+- **The spine gap depends on the page gutter.** Settled at **18 px** in B — `.fr-b` at
+  `preview/round4-spread.html:86` overrides the 16 px `:root` default that frame **A**
+  inherited — chosen against the 2 px gutter rather than in isolation, with the board's own
+  recess around it. It
   reads as a break of a different order from the gutter, which is what a spine is.
 - **The page margin is uniform, and a spread's is not.** Settled as **mirrored**:
   `--m-out: 12px`, `--m-in: 20px`, `--m-tb: 14px`. The inner margin is the larger one,
@@ -1154,7 +1168,9 @@ pages of a spread will read as a large break by comparison, which is probably ri
 binder has a spine — but **the number is not independent** and should be chosen against 2px
 rather than in isolation.
 
-> **Outcome: 16 px, inside B's recessed spine.** See **Round 4 — the spread**.
+> **Outcome: 18 px, inside B's recessed spine.** See **Round 4 — the spread**, including the
+> correction: this entry said 16 px for two rounds, taken from a `:root` default that the
+> judged variant overrode.
 
 ### Resolved at Round 4 — the page margin is uniform, and a spread's is not
 
