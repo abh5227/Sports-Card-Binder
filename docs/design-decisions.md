@@ -52,7 +52,7 @@ Three kinds, in descending order of how much weight they carry:
 | Sheen: per-sheet, not one band across     | settled     | Claude Code | measured — then required by the turn |
 | The page turns like a book                | settled     | **Andy**    | asked for it; not proposed by us     |
 | T3 — double-sided leaf, cards ride        | settled     | **Andy**    | looked, having read the counter      |
-| Turn duration                             | open        | **Andy**    | four on offer; not yet answered      |
+| Turn duration — 420 ms                    | settled     | **Andy**    | looked, over runs of flips not one   |
 | What a turn does with an undecoded card   | open        | —           | proposed, not decided                |
 
 ### Settled versus provisional — pending real use
@@ -867,9 +867,26 @@ condition the moment images come from anywhere but local disk.
 > variant chosen deliberately: pockets popping full mid-rotation, unannounced. Options were
 > proposed and costed; none is built.
 
-> **OPEN — turn duration.** Four are on offer — 260, 420, 600, 900 ms. Andy has not
-> answered, and neither of us should pick one by default. Note that duration and the cold
-> case interact: a longer turn is also a longer head start.
+### Settled: the turn takes 420 ms
+
+Andy ran the live control and chose **420 ms**, the second-fastest of the four on offer.
+
+**It was decided by looking, because nothing else was left to decide it with.** All four
+durations measured 9 / 9 on the cold reverse face, so no duration was cheaper, safer or
+more likely to show an unpainted page than any other. The measurements did not choose;
+they cleared the field.
+
+**And it was judged over runs of consecutive flips, not over a single turn.** That is the
+part worth keeping. A binder is for browsing, so the cost of a slow turn compounds across a
+session in a way one turn never reveals — a 900 ms flip that reads as pleasingly weighty
+in isolation is a tax the tenth time in a minute. Watching one turn would have selected a
+slower number. The fast end won on the repetition, not on the single instance.
+
+> **Generalisable: judge the duration of anything repeated by repeating it.** A single
+> playback answers "is this pleasant", which is the wrong question for a control the user
+> operates dozens of times an hour.
+
+**Round 5 is closed.** The sheen is Model 2, the turn is T3, the duration is 420 ms.
 
 ---
 
