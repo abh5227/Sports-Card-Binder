@@ -53,7 +53,7 @@ Three kinds, in descending order of how much weight they carry:
 | The page turns like a book                | settled     | **Andy**    | asked for it; not proposed by us     |
 | T3 — double-sided leaf, cards ride        | settled     | **Andy**    | looked, having read the counter      |
 | Turn duration — 420 ms                    | settled     | **Andy**    | looked, over runs of flips not one   |
-| What a turn does with an undecoded card   | open        | —           | proposed, not decided                |
+| Placeholder for an undecoded card         | rejected    | **Andy**    | asked when the state would occur     |
 
 ### Settled versus provisional — pending real use
 
@@ -61,7 +61,8 @@ Three kinds, in descending order of how much weight they carry:
 decided on the best evidence available and *expected* to be revisited once the thing exists.
 **Open** means not decided at all — the work is done and the choice is still outstanding. An
 open row names who it is waiting on, so that "nobody has answered" cannot be mistaken for
-"nobody has asked".
+"nobody has asked". **Rejected** means built or costed and then turned down, which
+is kept rather than deleted because the reasoning is what stops it being re-proposed.
 
 The distinction exists because **every decision in this file so far was judged on a preview of
 nine cards.** Real use means a collection of hundreds, sorted and re-sorted, over weeks. Some
@@ -862,10 +863,73 @@ That is not a condition this app has today: images are local derivatives, 38.5 K
 served from local disk, where the reverse face is ready in **0 ms**. It becomes a real
 condition the moment images come from anywhere but local disk.
 
-> **OPEN — what a turn should do when an image is not ready.** Left undecided on purpose.
-> If T3 simply turns anyway it degrades into T4 *by accident*, which is worse than either
-> variant chosen deliberately: pockets popping full mid-rotation, unannounced. Options were
-> proposed and costed; none is built.
+### Rejected: a placeholder for the not-yet-decoded card
+
+A placeholder was proposed for the case where a card has not decoded by the time the
+reverse face becomes legible — a flat fill at the card's own colour, painted under the
+image on every pocket always, so that "not ready" is a layer rather than a branch. It was
+measured, rendered at 1.5 Mbit, and **dropped.**
+
+**It was dropped because the state does not occur.** Andy's question was when he would ever
+have a connection slow enough to want it, and the honest answer is: not on this machine and
+probably not ever. Images cache to local disk. Import fetches from the web, but Stage F is a
+review queue, so a card reaches the binder with its image already down. A demo clone ships
+its images. The only route to images-on-a-wire is a second device over local wifi, which is
+orders of magnitude faster than the 1.5 Mbit where the failure first appears.
+
+> **The process error is worth more than the feature was.** The report that proposed the
+> placeholder also contained the measurement that closed the case for it: the reverse face
+> was 9 / 9 at every duration and under 20× CPU throttling. A contingency was kept alive
+> for one more round after the same document had ruled out the thing it was contingent on.
+> **Proposing a mitigation and measuring the risk away in the same pass is easy to do and
+> hard to notice** — the mitigation reads as diligence rather than as leftover scope.
+
+### Shelved, not lost: how to compute a card's placeholder colour
+
+The colour work was finished before the feature was dropped. It is recorded so it is not
+re-derived, and it is **not** a decision — nothing uses it.
+
+**The answer is the mean in linear light** — average r, g, b in linear space, re-encode to
+sRGB. Worst ΔL **0.003** across 22 cards, which is 8-bit rounding rather than error. It
+satisfies the criterion by construction: averaging in linear light makes the result's
+luminance equal the image's mean luminance exactly.
+
+Two traps, both measured, both non-obvious:
+
+- **The mode is a trap, and its mechanism is general rather than vintage-specific.** One
+  peak of a distribution carries nothing about the rest of it, so it fails wherever a colour
+  dominates by *area* but not by *weight*. The worst case measured was `jones-blue-wave`, a
+  modern dark parallel, at ΔL **0.797** — 4.8× worse than showing nothing at all. It was
+  expected to fail on cream-bordered vintage; those survive it comparatively well.
+- **The naive 8-bit mean is the subtler trap.** It looks like the same statistic and runs
+  systematically dark — up to ΔL **0.109** — on exactly the high-contrast cards this
+  collection skews toward. Gamma is the whole difference.
+
+**The failure condition is brighter or darker than the *card*, not than the page.** Every
+card measured is brighter than the page — L 0.126 to 0.810 against 0.010. That is what a
+card is.
+
+> **The first measurement was circular and produced a perfect score.** It compared the
+> luminance of the mean colour against itself, reporting ΔL 0.000 for the mean candidate.
+> It was caught because a result that is *exactly* zero across every card is a description
+> of the arithmetic rather than of the images. It would have given the right answer for the
+> wrong reason, and the wrong answer the moment anyone asked how much better.
+
+> **Trigger to revisit: card images served from anywhere other than local disk.** Until
+> then this stays shelved. Nothing about it is a migration, and no schema exists yet at all.
+
+**If it ever is built, the colour is catalogue data.** `CLAUDE.md` states that the image
+belongs to the `card`, because a Black Refractor and its base card are different prints
+that look different — so a colour derived from a card image is catalogue-derived, and a
+catalogue refresh must never touch a `holding`. Stored on `holding`, a routine image
+refresh either writes into the irreplaceable tier or strands a stale value there. **One
+colour beside the card's image, one beside the holding's override** for the minority case
+where Andy's own photograph is the source: two colour fields mirroring two image fields.
+
+And it must be written by the same operation that writes the image, in the same
+transaction. The colour is derived from a *specific version* of an image, so anywhere else
+it becomes a second thing to keep in sync — and the failure is silent, because a refreshed
+image with a stale colour looks correct until the one moment the placeholder shows.
 
 ### Settled: the turn takes 420 ms
 
