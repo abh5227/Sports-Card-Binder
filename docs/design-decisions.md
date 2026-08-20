@@ -49,11 +49,19 @@ Three kinds, in descending order of how much weight they carry:
 | One sheet of plastic, not nine            | settled     | Claude Code | argued on cost; looks identical      |
 | The minimal frame, B                      | settled     | **Andy**    | looked — overruled both of us        |
 | No page-edge stack, and none retrofitted  | settled     | Claude Code | follows from B; recorded as a loss   |
+| Sheen: per-sheet, not one band across     | settled     | Claude Code | measured — then required by the turn |
+| The page turns like a book                | settled     | **Andy**    | asked for it; not proposed by us     |
+| T3 — double-sided leaf, cards ride        | settled     | **Andy**    | looked, having read the counter      |
+| Turn duration                             | open        | **Andy**    | four on offer; not yet answered      |
+| What a turn does with an undecoded card   | open        | —           | proposed, not decided                |
 
 ### Settled versus provisional — pending real use
 
 **Settled** means decided and not to be reopened without new evidence. **Provisional** means
 decided on the best evidence available and *expected* to be revisited once the thing exists.
+**Open** means not decided at all — the work is done and the choice is still outstanding. An
+open row names who it is waiting on, so that "nobody has answered" cannot be mistaken for
+"nobody has asked".
 
 The distinction exists because **every decision in this file so far was judged on a preview of
 nine cards.** Real use means a collection of hundreds, sorted and re-sorted, over weeks. Some
@@ -697,6 +705,174 @@ governs ghost slots, arriving from the other direction — see **two kinds of em
 
 ---
 
+## Round 5 — the sheen, and the page turn
+
+Two things settled here, and they turned out to be the same question. The sheen was
+carried from Round 3 as a spread problem; it became a *motion* problem the moment the page
+had to turn.
+
+### Settled: Model 2 — one band per sheet, not one band across the spread
+
+A spread is two physical sheets under one light. Round 3 left open whether that reads as
+one continuous gradient across the whole spread (**Model 1**) or two aligned per-sheet
+gradients (**Model 2**). Both were built and measured against each other, with the frame
+held constant.
+
+**Model 2, on two independent arguments. Either one is sufficient.**
+
+**One — a single band cannot light two sheets.** Measured: a continuous sweep has one
+peak, and there is nowhere to put it. Placed to serve both pages it lands on the gutter,
+where 47–51% of the highlight falls on the spine and neither sheet gets a specular. Placed
+to serve one page it leaves the other at floor luminance for its entire width. There is no
+third position; the geometry does not permit one.
+
+**Two — a band that spans both sheets cannot rotate with one leaf.** This argument did not
+exist until the page had to turn, and it is the stronger of the two because it is
+structural rather than a matter of tuning. A band defined across the spread is owned by
+neither sheet. The moment one sheet rotates independently, that element cannot rotate with
+it, and there are exactly two outcomes: leave it flat in screen space, and the turning leaf
+keeps a highlight of *constant intensity* while swinging through 180°; or split it at the
+spine so the turning half can travel — which is Model 2, arriving by a second route.
+
+The first outcome is visibly wrong in the way that matters most here. **A surface that does
+not change brightness as it swings reads as a rotating texture, not as a page.** The
+luminance change through the arc *is* the cue that says "physical object".
+
+### What did NOT decide this: the static evidence
+
+The static step across the spine between Model 1 and Model 2 measures **1.035–1.044:1**.
+Andy could not see it, and there is no reason he should have — that is well below the
+threshold at which a luminance step reads as an edge.
+
+**This is recorded deliberately.** The obvious way to justify Model 2 is to point at the
+static spread and claim the seam is visible. It is not. Had the decision rested on that
+claim it would have been a decision made on a difference nobody can perceive, and it would
+deserve to be reopened. It rests on the two arguments above instead, both of which are
+about what the sheen must be able to *do*, not about how the still frame looks.
+
+### The refinement: Model 2 is necessary, but not sufficient
+
+Model 2 makes per-sheet lighting *possible*. It does not make it *happen*.
+
+As built, the band is painted **on** the sheet — so it travels with the surface, exactly
+like a texture, which is the failure Model 1 was rejected for. Getting a turn to read as a
+page requires two more things on top of the per-sheet element:
+
+1. the band must move **relative to** the surface as the surface rotates (implemented: it
+   travels 38% across the face through the arc)
+2. the face must **change luminance** through the arc (implemented: a shading pass)
+
+**Model 2 is the precondition, not the effect.** A future session that keeps the per-sheet
+element but drops either of those two has kept the structure and lost the reason for it.
+
+The settled values, both sheets, direction held common:
+
+```css
+.page.lft  .sheet-sheen{ linear-gradient(122deg, 0 30%, .070 44%, .020 53%, 0 64%) }
+.page:not(.lft) .sheet-sheen{ linear-gradient(122deg, 0 4%, .041 17%, .012 25%, 0 36%) }
+```
+
+### Settled: the page turns like a book — T3
+
+Andy, unprompted: *"i also think that when you click 'next page' or back it should flip
+like a book."* Neither of us proposed it.
+
+Four turns were built inside frame B and shown at true scale, with a live duration control
+and an end-of-binder case:
+
+| variant | what turns                                                   | honest about the object?  |
+| ------- | ------------------------------------------------------------ | ------------------------- |
+| T1      | no 3D at all — the spread cross-fades                        | makes no claim            |
+| T2      | one leaf, double-sided geometry, **blank** back face         | no — a page has two sides |
+| T3      | one leaf, double-sided, **cards ride in their pockets**      | **yes**                   |
+| T4      | one leaf, double-sided, turns **empty** and fills on arrival | no — it lies briefly      |
+
+T1 was included as the honest baseline: if a cross-fade reads well enough, everything
+below it is cost for nothing, and it is the only variant with no failure mode at the ends.
+T4 was included as the fallback if T3 proved expensive.
+
+**Andy chose T3**, having read the cold-cache counter-argument against it first.
+
+On T3 the leaf's reverse face is **the next spread's left page, with its cards already in
+their pockets** — so the turn *assembles* the next spread rather than preceding it.
+
+### Measured: the turn is free
+
+Headful Chrome, 5–6 turns per variant, against this machine's idle rAF floor measured in
+the same session — never against the nominal 8.33 ms. Idle: **8.30 ms median, 9.30 ms p95,
+9.40 ms worst.**
+
+| variant                     | median  | p95     | worst   | dropped     |
+| --------------------------- | ------- | ------- | ------- | ----------- |
+| T1 cross-fade               | 8.30 ms | 9.20 ms | 9.30 ms | **0 / 388** |
+| T2 blank back               | 8.30 ms | 9.20 ms | 9.40 ms | **0 / 390** |
+| T3 double-sided, cards ride | 8.30 ms | 9.10 ms | 9.40 ms | **0 / 390** |
+| T4 empty then fill          | 8.30 ms | 9.30 ms | 9.40 ms | **0 / 388** |
+
+Indistinguishable from the display sitting still — including the faithful variant, with two
+populated faces, a travelling highlight, a shading pass, and a full re-render on landing.
+**Cost is not a reason to prefer any of these four over any other.**
+
+### Measured: the cold case, which was the reason to doubt T3
+
+T3 shows the next spread's left page on the back of a rotating leaf, so those images must
+be decoded before that face becomes legible. The counter-argument was that a cold cache
+would produce pockets popping full mid-rotation.
+
+**It does not, and the reason is structural.** The reverse face has to exist in the DOM
+regardless — it *is* the leaf's back side — so its images are requested at **render** time,
+not at turn time.
+
+- **Turn one cannot be late at all.** Its reverse face is requested in the same pass as the
+  visible spread. It is late only if the whole page is late, in which case there is nothing
+  to turn.
+- **Turn two onward** gets its reverse face at the completion of the previous turn: the
+  user's dwell, plus the rotation, before it is needed.
+
+Cold, fresh browser profile, unique URL per pocket so nothing is served from cache, images
+over `http://localhost` — which is what this app is:
+
+| condition                                    | reverse face at the moment it becomes legible |
+| -------------------------------------------- | --------------------------------------------- |
+| turn 1, zero dwell, 260 / 420 / 600 / 900 ms | **9 / 9 loaded and painted**                  |
+| turn 2 immediately after turn 1, no gap      | **9 / 9 loaded and painted**                  |
+| CPU throttled 6× and 20×                     | **9 / 9** — decode is not the bottleneck      |
+
+Frame timing on those same cold runs is unchanged from warm: 8.30 ms median, 9.40 ms worst,
+**0 dropped frames in all twelve runs**.
+
+**Verified in pixels, not only in `img.complete`.** Loaded is not painted, so the video of
+each turn was measured frame by frame over the left-page region. T4 — whose leaf is bare by
+design — gives the signature of an unpainted face: seven consecutive frames at mean luma 38,
+**standard deviation 6.9**, an even grid of dark wells. T3 on a cold cache never drops below
+71.8 and settles at 82.1. **There is no such frame.**
+
+> **No preload scheduler is needed, and none was built.** This does not override the spike
+> that measured explicit preloading 15% *slower* than the browser's own cache — it confirms
+> it. The browser already fetches these images at the right time, because the markup already
+> asks for them at the right time.
+
+### Where T3 does break, and what is still open
+
+Forced with a throttled link, the failure is real: at 1.5 Mbit and below, **turn two shows
+0 / 9** at the moment the reverse face becomes legible. The bound is **bandwidth to the
+image source, not CPU and not decode** — 20× CPU throttling does not reproduce it.
+
+That is not a condition this app has today: images are local derivatives, 38.5 KB median,
+served from local disk, where the reverse face is ready in **0 ms**. It becomes a real
+condition the moment images come from anywhere but local disk.
+
+> **OPEN — what a turn should do when an image is not ready.** Left undecided on purpose.
+> If T3 simply turns anyway it degrades into T4 *by accident*, which is worse than either
+> variant chosen deliberately: pockets popping full mid-rotation, unannounced. Options were
+> proposed and costed; none is built.
+
+> **OPEN — turn duration.** Four are on offer — 260, 420, 600, 900 ms. Andy has not
+> answered, and neither of us should pick one by default. Note that duration and the cold
+> case interact: a longer turn is also a longer head start.
+
+---
+
 ## Carried forward
 
 The Round 1 entries below are kept **with their original reasoning intact** so that the
@@ -738,8 +914,13 @@ refractor, a matte common and a black-bordered modern card.
 
 ### Carried to Round 4 — two kinds of empty pocket
 
-> **Still open after Round 3.** Round 3 settled how an empty pocket *looks*; this entry is about
-> what it *says*, which was never a treatment question.
+> **Still open after Round 5.** Round 3 settled how an empty pocket *looks*; this entry is about
+> what it *says*, which was never a treatment question. Rounds 4 and 5 were about the spread and
+> the turn and did not touch it. The heading is left as written so the carry is visible.
+
+> **Round 4 sharpened it from the other side.** The extent finding under **Round 4 — the
+> spread** is the same distinction arriving from the frame rather than from the pocket: in
+> set-completion mode the checklist defines what exists, and everywhere else the holdings do.
 
 Both get the lit sleeve, now at the dimmed setting. They differ **only in labelling**, which is
 not a treatment question. Agreed with Andy.
@@ -831,12 +1012,16 @@ has two.
 > **Outcome: mirrored, inner larger than outer** — 20 px inner, 12 px outer, 14 px top and
 > bottom. See **Round 4 — the spread**.
 
-### Carried to Round 4 — one sheet, across two sheets
+### Resolved at Round 5 — one sheet, across two sheets
 
 Choosing one specular per page makes this specific rather than open: **a spread is two physical
 sheets under one light.** The sheen should therefore be continuous in **direction** while
 restarting at each sheet's surface. Whether that reads as one gradient across the spread or two
 aligned ones is the thing to build — and it is a question that did not exist before Round 3.
+
+> **Outcome: two aligned per-sheet gradients, not one across the spread.** Settled twice
+> over — once on a measurement of where a single peak can go, and once, structurally, on
+> the page turn that did not exist when this was carried. See **Round 5**.
 
 ---
 
