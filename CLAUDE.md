@@ -391,6 +391,36 @@ That will not always be true, and "ask the accused for the record" is a weak che
 > improvised at the moment it is needed, because the moment it is needed is the moment
 > nobody's account can be taken on trust.
 
+### A dramatic first result is more likely to be a broken instrument than a broken thing
+
+This has now happened three times, and twice the tell was identical.
+
+| the first result | what it actually was |
+| ---------------- | -------------------- |
+| *127 of 310 frames over budget*, for all four turn variants | a nominal 8.33 ms compared against, instead of this machine's idle floor |
+| a single **158 ms** frame during a page turn | the CDP screencast that was measuring it |
+| **70% of pixels differ**, max delta 234, on the Svelte port | element screenshots taken at two different subpixel offsets |
+
+**The tell, twice, was a result too uniform to be real.** Four different workloads do not
+produce four identical numbers. A port that then measures geometrically exact — same
+1096 px frame, same 2 px gutter, same z-scale — does not differ in 70% of its pixels.
+
+> **Before reporting an extreme measurement, reproduce it with the apparatus changed.**
+> A different capture method. A control that should show nothing and must therefore show
+> nothing. The instrument detached entirely. If the number survives all three it is real;
+> if it moves, the apparatus was the finding.
+
+**A control is only a control if it varies the thing you suspect.** One of the controls used
+here — the same page diffed against itself with the frame pushed 137 px down the document —
+returned an exact zero and proved nothing, because `scrollIntoView` had put both captures at
+the same viewport position before the screenshot. It looked like evidence and was inert.
+Check that a control can actually fail before trusting that it did not.
+
+Claude Code's part in the same incident is recorded above: the citation that triggered it
+named the wrong prompt — the right instruction, the wrong section — one commit after the
+rule requiring verifiable citations went into this file. Both failures are real and neither
+excuses the other.
+
 ## The decision log ships with this repo
 
 **Andy's decision: the decision log becomes public.** It moves into this repository at
