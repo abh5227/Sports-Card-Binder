@@ -341,6 +341,36 @@ which is the behaviour this rule exists to protect.
 > invites agreement instead of checking, which is the exact failure a diagnostic is for. Cite
 > `file:line` in this repo, or restate the substance inline.
 
+### Who holds the record — and it is not the side that carries the thread
+
+The arrangement assumes the executor starts fresh each session while the planner carries
+continuity. **For anything ever actually said or sent, that is backwards.** Claude Code holds
+the transcript; the planner holds a summary.
+
+> **On any question of what was in a previous prompt, Claude Code is the source of truth and
+> the planner is not.** The planner's memory is lossy in a way it cannot detect from the
+> inside — a summary reads as complete, and nothing in it announces what was dropped. So the
+> planner does not assert that something was, or was not, said. It asks for the transcript.
+
+This is the citation rule turned on the participant who wrote it: **a claim about the record
+has to rest on the record, and only one side of this arrangement is holding it.**
+
+**The incident.** A planner escalated a possible fabricated attribution — a design record
+crediting Andy with a decision, with no visible source. The source was a prompt the planner
+had written itself and then lost: two of its own prompt headers had created a gap in the
+numbering, and the retained summary gave no sign anything was missing. The escalation was
+built on *"I don't remember writing it"* presented as *"it was not written."*
+
+**That gap is where this failed, and it is the general form.** "I have no record of it" and
+"it did not happen" are different claims, and only the first one is ever available to a
+participant working from a summary. The check that resolves it costs one request for the
+transcript, and the side that can run it is the side that was being questioned.
+
+Claude Code's part in the same incident is recorded above: the citation that triggered it
+named the wrong prompt — the right instruction, the wrong section — one commit after the
+rule requiring verifiable citations went into this file. Both failures are real and neither
+excuses the other.
+
 ## The decision log ships with this repo
 
 **Andy's decision: the decision log becomes public.** It moves into this repository at
