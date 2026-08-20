@@ -1,10 +1,17 @@
 /**
  * The API server.
  *
- * Small on purpose. It serves the built frontend from dist/ and one health
- * endpoint. Stage B has no schema and no routes beyond proving the toolchain is
- * connected end to end: Node -> Fastify -> better-sqlite3 -> a file in
- * $BINDER_DATA_DIR, and Vite's build output reaching the browser.
+ * Small on purpose, and describing what it does rather than which stage it is at —
+ * a comment pinned to a stage number reads as stale long before it reads as wrong.
+ *
+ * It serves two things: the Vite build out of dist/, and one health endpoint. It
+ * serves NO card data — the binder currently renders hardcoded fixtures in the
+ * frontend, and there is no schema for it to read from yet.
+ *
+ * The health endpoint is not decoration. It proves the chain Node -> Fastify ->
+ * better-sqlite3 -> a file in $BINDER_DATA_DIR actually opens, it prints the
+ * resolved data directory on startup, and Playwright waits on it before running
+ * the e2e suite.
  *
  * Runs straight from TypeScript source — Node 24 strips the types. See tsconfig's
  * erasableSyntaxOnly, which keeps that guarantee checked.
