@@ -48,13 +48,12 @@ Three kinds, in descending order of how much weight they carry:
 | 4-pocket is 9-pocket at 2×                | settled     | **Andy**    | overruled the planner's scaling rule |
 | One sheet of plastic, not nine            | settled     | Claude Code | argued on cost; looks identical      |
 | The minimal frame, B                      | settled     | **Andy**    | looked — overruled both of us        |
-| No page-edge stack, and none retrofitted  | settled     | Claude Code | follows from B; recorded as a loss   |
 | Sheen: per-sheet, not one band across     | settled     | Claude Code | measured — then required by the turn |
 | The page turns like a book                | settled     | **Andy**    | asked for it; not proposed by us     |
 | T3 — double-sided leaf, cards ride        | settled     | **Andy**    | looked, having read the counter      |
 | Turn duration — 420 ms                    | settled     | **Andy**    | looked, over runs of flips not one   |
-| Placeholder for an undecoded card         | rejected    | **Andy**    | asked when the state would occur     |
-| Owned card with no image                  | open        | **Andy**    | no treatment exists; needs a page    |
+| Placeholder for an undecoded card         | rejected    | the planner | Andy asked when the state would occur |
+| Owned card with no image                  | open        | **Andy** ?  | no treatment exists; needs a page    |
 
 ### Settled versus provisional — pending real use
 
@@ -64,6 +63,14 @@ decided on the best evidence available and *expected* to be revisited once the t
 open row names who it is waiting on, so that "nobody has answered" cannot be mistaken for
 "nobody has asked". **Rejected** means built or costed and then turned down, which
 is kept rather than deleted because the reasoning is what stops it being re-proposed.
+
+**A `?` after a name means the attribution is inferred rather than stated.** It is right on
+the evidence and nobody said it in those words. The marker exists because an inference that
+goes unmarked is reported as a fact the next time anyone reads the row.
+
+**Only acts belong in this table.** A consequence that follows from a decision has no agent
+and does not get a row — *B has no page-edge stack* is a property of having chosen B, and it
+lives in the Round 4 prose where the reasoning is, not here where it would need an author.
 
 The distinction exists because **every decision in this file so far was judged on a preview of
 nine cards.** Real use means a collection of hundreds, sorted and re-sorted, over weeks. Some
