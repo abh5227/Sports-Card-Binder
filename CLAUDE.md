@@ -354,9 +354,10 @@ the single item that needed evidence got audited the way its neighbours deserved
 
 **The same rule pointing the other way — cite what the other side can open.** The planner
 once cited a decision ID and a section of a planning document as though both were checkable
-here. Neither is in this repo. Claude Code found the substance independently at
-`CLAUDE.md:95-99`, and said the citation could not be verified rather than nodding along —
-which is the behaviour this rule exists to protect.
+here. Neither is in this repo. Claude Code found the substance independently under
+**The tier boundary** above — *the image belongs to the card*, and *a catalogue refresh
+must never touch a holding* — and said the planner's citation could not be verified rather
+than nodding along, which is the behaviour this rule exists to protect.
 
 > **A reference the reader cannot open is decoration wearing the costume of evidence.** It
 > invites agreement instead of checking, which is the exact failure a diagnostic is for. Cite
@@ -568,12 +569,13 @@ Not a rewrite. Three read-throughs, each with one specific question.
 
 Whatever `README.md` tells a stranger to run is what CI runs, from a clean checkout.
 
-**Why this is mechanised rather than performed by a human:** Chef's Choice's
-`README.md:12-22` documents a cold start that cannot work — it omits `npm install &&
-npm run build`, while `app.py:449-454` reads `dist/index.html` directly, so `/` returns
-500. `CLAUDE.md:41-48` has the correct sequence and even annotates the gap. The README
-was never fixed and stayed broken for six weeks, on a project run with more discipline
-than most. A human-performed install ritual is exactly the check that already failed.
+**Why this is mechanised rather than performed by a human:**
+`chefs-choice:README.md:12-22` documents a cold start that cannot work — it omits
+`npm install && npm run build`, while `chefs-choice:app.py:449-454` reads
+`dist/index.html` directly, so `/` returns 500. `chefs-choice:CLAUDE.md:41-48` has the
+correct sequence and even annotates the gap. The README was never fixed and stayed broken
+for six weeks, on a project run with more discipline than most. A human-performed install
+ritual is exactly the check that already failed.
 
 On a public portfolio repository this is the difference between "I cloned it and it
 worked" and "I cloned it and gave up".
