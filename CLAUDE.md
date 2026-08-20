@@ -477,6 +477,20 @@ same way.**
 > and that shape recurred three times in one table. The shape is the reusable part; the wrong
 > figure is not.
 
+### Two things that look dead and are not
+
+A dead-code sweep will find both of these again. Neither is dead.
+
+- **`/api/health` has no caller in the UI**, and that is not evidence of anything. It is read
+  by `server/index.ts` at startup to print the resolved data directory, and it is the
+  readiness probe Playwright waits on before running the e2e suite — see the `webServer`
+  block in `playwright.config.ts`. Removing it stops the test run from ever starting.
+- **A custom property read through `getComputedStyle` is invisible to grep.** `--dur` appears
+  in `app.css` and in no `var()` anywhere, which looks conclusive and is wrong: the page-turn
+  duration is read at runtime in `Spread.svelte`, inside `duration()`. **Grep is not a
+  dead-code detector for CSS custom properties** — a token can be read by a string lookup that
+  no static search will match.
+
 ### Two implicit dependencies, both silent until something moves
 
 Recorded together because they are the same failure at two scales: **something worked because
