@@ -241,12 +241,19 @@ and every component import used solely in markup — including the child compone
 renders, which is most of them. Both are turned off for `**/*.svelte` in `biome.json`.
 Do not "fix" the warning by deleting a variable the template uses.
 
-> **That leaves a real hole, and nothing else covers it.** Tested: an import added to a
-> `.svelte` file and never referenced anywhere is reported by **neither** Biome nor
-> `svelte-check --threshold warning`. Genuinely unused imports in `.svelte` files are
-> currently caught by nobody. The alternative — leaving the rules on — produces a false
-> failure on every component that renders a child, which trains everyone to ignore the
-> linter. This is a known, accepted gap, not an oversight.
+> **That leaves a real hole, and nothing else covers it.** This was **tested, not assumed**:
+> an unreferenced import was added to `src/lib/binder/Page.svelte` and confirmed to be
+> reported by **neither** Biome nor `svelte-check --threshold warning`. Genuinely unused
+> imports in `.svelte` files are currently caught by nobody.
+>
+> **Accepted deliberately.** A rule that fires on every correctly-used component import is
+> not a rule, it is noise — and noise is what kills the rules that do work. Trading a small
+> class of dead imports for a linter people still read is the right trade, and Vite
+> tree-shakes the bundle cost anyway.
+>
+> **Revisit condition, not a scheduled task: if Biome gains Svelte template parsing, turn
+> both rules back on.** Recording it as a condition is what stops the gap being accepted
+> permanently by default.
 
 ---
 
