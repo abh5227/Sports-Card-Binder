@@ -41,6 +41,12 @@ Three kinds, in descending order of how much weight they carry:
 | The lit sleeve destroys a card's boundary | settled     | Claude Code | measured, per edge, per treatment    |
 | The card's lit edge returns, directional  | settled     | Claude Code | measured a Round 1 deferral false    |
 | The bottom edge that no well can fix      | settled     | Claude Code | built two diagnostics to find out    |
+| Tight gutter                              | settled     | **Andy**    | looked at three, full page           |
+| Empty pocket dimmed to ~40%               | settled     | **Andy**    | looked; confirmed a prediction       |
+| Jones's bottom edge is closed             | settled     | **Andy**    | looked — measurement stayed bad      |
+| Scrim keeps its 10% show-through          | settled     | **Andy**    | looked; overruled both of us         |
+| 4-pocket is 9-pocket at 2×                | settled     | **Andy**    | overruled the planner's scaling rule |
+| One sheet of plastic, not nine            | settled     | Claude Code | argued on cost; looks identical      |
 
 ### Settled versus provisional — pending real use
 
@@ -392,6 +398,206 @@ Applies to anything later drawn within a card's bounds, not only the reveal.
 
 ---
 
+## Round 3 — the page
+
+**Question:** how do nine pockets sit on a page, and what does the second layout do?
+
+**Settled:**
+
+- **Gutter: tight.** 2px between pockets, which is 16px card-to-card once the 7px sleeve inset
+  is counted on both sides.
+- **Empty pocket: dim.** `#20242A`, highlight .06, rim .085 — about 40% of Round 2's lift.
+- **One sheet of plastic, not nine speculars**, with the z-scale below.
+- **4-pocket is 9-pocket at 2×.** Proportional in geometry *and* type, scrim at full card width.
+- **Scrim opacity stays at 90%,** and the show-through is a deliberate property.
+
+### Why the gutter counter failed
+
+The counter was that cards nearly touching would read as a wall of colour, and that breathing
+room was what would make a page legible. Three widths were built at full page with nine real
+cards, everything else identical.
+
+> **Space around a loud object does not quiet it.** Junk-wax commons are exactly as loud at a
+> 22px gutter as at 2px. The gutter was never the lever for legibility, because legibility was
+> never gutter-limited — every card carries its own border and sits on a near-black page, and
+> 16px of `#171A1F` is already a decisive separator.
+
+What the gutter actually changes is **whether the page reads as a sheet with pockets or as a
+grid of separate items.** At 22px it becomes a gallery grid and the binder premise quietly
+evaporates. At 2px it is a sheet.
+
+**Physical arithmetic agrees, and would have led if it had been done first.** A real 9-pocket
+page is about 9″ wide holding three 2.5″ cards, leaving roughly 1.1″ for two gutters and two
+margins — **9–15px card-to-card at this scale.** Tight at 16px is already at the loose end of
+accurate; the middle setting was wider than any real page.
+
+### The empty pocket — the mechanism is area, not luminance
+
+The planner's prediction was recorded at Round 2 as *reasoning, and therefore the weakest kind
+of entry*: that the lit sleeve had been tuned against a lone pocket and would need far less
+brightness surrounded by cards. **It was right**, and by a mechanism the prediction did not
+name.
+
+At Round 2's setting the six empties of a three-card tail form a single grey slab across two
+thirds of the page and the eye goes straight to it — at only 20% of a card's mean luminance.
+
+> **Calm beats bright at scale.** Six contiguous empty pockets are a large *uniform* region
+> while the cards are busy and broken up, so the empties win the page on area rather than on
+> brightness.
+
+**This is why a lone pocket could never have predicted it: a lone pocket has no area to
+accumulate.** There is also a floor — at the dimmest setting tested the lattice disappears and
+the page loses its structure.
+
+### The sheen — decided on cost, because appearance could not decide it
+
+Round 2 gave every pocket its own copy of the specular, because Round 2 only ever tested one
+pocket. Nine identical highlights in identical relative positions is not what a sheet of plastic
+under one light does, and **it is invisible until nine pockets are on screen at once.**
+
+**Andy looked and could not tell the two apart**, so the decision was taken on cost.
+
+**Cost to build is a wash.** One element in the page against one in each pocket; DOM count is
+irrelevant at this scale.
+
+**Cost to live with is decided by the re-order.** FLIP-style reflow is this application's
+central interaction — cards animate between positions whenever the sort changes. With
+per-pocket speculars, **nine highlights fly across the page on every re-sort.**
+
+> **Light does not move when objects move.**
+
+One sheet stays put and the cards travel under it, which is what happens. This is a code
+argument rather than an aesthetic one: per-pocket would have to suppress or special-case the
+specular during animation, which is more code than the single element it saved.
+
+The lift-out interaction is the same shape. A card lifted out of its pocket is a card out of its
+sleeve and should carry no specular; with one sheet it does not, for free.
+
+### Why this does not violate component ownership
+
+The objection is that a `Pocket` ought to own its own appearance, and a page-level sheet breaks
+that.
+
+**It loses, and the reason is worth keeping.** The specular is not the pocket's appearance — it
+is the **sheet's**. A pocket is a hole welded into a sheet of plastic. The component boundary
+should follow the object, and here it does: the sheet owns the specular, the pocket owns the
+pocket. The coupling is real, and it runs in the right direction.
+
+### The z-scale — recorded once, because the coupling spans two components
+
+One sheet means a page-level element must sit **above** every pocket's plastic and **below** the
+hover reveal. That ordering cannot live inside either component alone, so it lives here:
+
+| layer          | z-index | owned by |
+| -------------- | ------- | -------- |
+| well           | 1       | pocket   |
+| card           | 2       | pocket   |
+| mouth          | 2       | pocket   |
+| sheet specular | 3       | page     |
+| reveal         | 4       | pocket   |
+| lip            | 5       | pocket   |
+
+Two rules are encoded in that order and both were found the hard way:
+
+- **UI sits above the plastic.** The reveal is above the specular, or a highlight washes across
+  the text.
+- **The card's own edge sits above the label.** The lip is above the reveal — the Round 2
+  z-order rule, that a label never truncates the object it labels.
+
+**Do not give a pocket its own stacking context.** Isolating it would lift the page's specular
+above everything inside the pocket, including the reveal, and re-break the first rule.
+
+### 4-pocket is a different job, and it is the easier case
+
+Nine is browsing; four is display. The cards get bigger rather than the page getting smaller,
+and at 2× it reads as a different job rather than as a zoomed-in nine.
+
+**One rule: 4-pocket is 9-pocket at 2×.** Card, sleeve inset, gutter, page margin, scrim
+padding, scrim type, hairline and lip all scale by the same factor. 9-pocket is unchanged by
+construction. This replaced a proposal that the scrim be a UI element of *constant* width — that
+proposal is dead, and it was what made the panel read as a bar three-quarters empty.
+
+**The panel feels better at 4-pocket, which inverts what was assumed going in.** The worry was
+that covering a third of a card you are deliberately examining would feel worse than covering a
+third of one you are skimming. It is the other way round: at 4-pocket a third of the card buys
+text you read effortlessly; at 9-pocket the same third buys text you squint at. **That makes
+9-pocket the harder case, not 4.**
+
+### The scrim's 90% is deliberate — do not "fix" the doubled name
+
+At 2× the artwork behind the panel is also 2×, so the 10% that comes through becomes legible.
+Its most visible instance is **a card's own nameplate sitting behind the panel — Crosby at
+4-pocket, where *Sidney Crosby / Penguins · Center* reads clearly beside `GOLD` and `/25`.**
+
+> **Both Claude Code and the planner read that as a rendering mistake and proposed removing it.
+> Andy looked at exactly that case and kept it.** The show-through is not a defect being
+> tolerated; it is translucency doing its job. The card has not gone anywhere underneath the
+> label, and at full opacity it genuinely disappears in that region.
+
+**If you are here because you saw a doubled name and reached to fix it: this is the sentence.
+It was chosen. Leave it.**
+
+### The Jones bottom edge — closed by looking, with the measurement left bad
+
+Round 2 carried this forward on a proposed mechanism: that in a grid, a dark card's bottom edge
+sits above the next card's bright top lip, so the neighbour would supply the boundary.
+
+**The mechanism fails.** Measured on a full page, Jones's bottom edge is **1.04:1** against what
+is under it, and **1.09:1** against the neighbour's lip 16px below. At that distance the lip
+reads as *the top of the next card*, not as the bottom of this one. What the grid does supply is
+a faint line 9px down — the next pocket's mouth at 1.63:1 — which is the pocket lattice, not the
+card's boundary.
+
+**It was closed anyway, by Andy looking.** On a real page Jones reads as a complete card,
+because three of its four edges are resolved and its interior is bright against a dark page. The
+measurement stays bad and the perceptual failure does not appear.
+
+> Claude Code had already closed this on its own looking. **It is recorded as closed on Andy's**,
+> because the hierarchy at the top of this file exists to privilege his and would be worth
+> nothing if it were quietly bypassed the first time the two happened to agree.
+
+**The limit is kept: not-observed, not proved-absent.** The case that would bite is a card dark
+at the bottom *and* dark throughout, with no bright interior to anchor it. None of the nine test
+images is that card. **One exists in Andy's collection — the 2012 Topps Chrome Harper Black
+Refractor** — and is absent from the test set only because the scraper returned the wrong card
+for it. When that image is sourced, look again.
+
+### Banding — real as an appearance, and nothing to do with the edge treatment
+
+The risk carried from Round 2 was that a bright top and dark bottom repeated down three rows
+would read as horizontal banding.
+
+Row-top against row-bottom mean luminance differs by +0.070, +0.007 and +0.045 down the three
+rows — but that tracks **card design**, not the lip. Cards are top-heavy by convention: logos
+and team names at the top, nameplates at the bottom. A 1px directional line cannot move a
+twelve-row mean by 0.07. **The appearance is real and it is the cards'. Nothing to fix.**
+
+### The method rule — one element, two failure modes, opposite worst cases
+
+This generalises well past the scrim and is the most reusable thing in the round.
+
+A translucent panel can fail in two unrelated ways, and **the worst case for each is the
+opposite of the worst case for the other**:
+
+- **Leak** — artwork showing *through* — is worst over **busy or high-contrast interior**.
+- **Reading as a hole punched in the card** is worst when the panel is **surrounded by bright
+  artwork**, because a dark rectangle cut into a light card is the picture of a window.
+
+The hole test was built on a dark card, on the reasoning that a dark panel might merge with dark
+artwork. That is the *mild* case: a dark panel on a dark card has barely any contrast across its
+own boundary, so it cannot read as a hole in either direction — **it is mild precisely because
+the two things are similar.**
+
+> **When testing whether an element reads as sitting ON something, the worst case is maximum
+> contrast at its edge, not minimum.** And when an element has two failure modes, pick a card
+> for each. **Testing both on one card is how you end up testing neither.**
+
+A postscript worth having: on the light card both modes peaked together — Durant's own nameplate
+ghosts *more* visibly than a dark card's, because it ghosts bright. Two failure modes with
+opposite worst cases can still share a card; it just cannot be assumed.
+
+---
+
 ## Carried forward
 
 The Round 1 entries below are kept **with their original reasoning intact** so that the
@@ -431,10 +637,13 @@ refractor, a matte common and a black-bordered modern card.
 > a bright top-left line lands on cream and vanishes, lands on black and does the work, with no
 > knowledge of the artwork required. See **Three places, not two**.
 
-### Carried to Round 3 — two kinds of empty pocket
+### Carried to Round 4 — two kinds of empty pocket
 
-Both get the lit sleeve. They differ **only in labelling**, which is a Round 3 question, not a
-treatment question. Agreed with Andy.
+> **Still open after Round 3.** Round 3 settled how an empty pocket *looks*; this entry is about
+> what it *says*, which was never a treatment question.
+
+Both get the lit sleeve, now at the dimmed setting. They differ **only in labelling**, which is
+not a treatment question. Agreed with Andy.
 
 - **Ghost slots** — cards in a set's checklist that Andy does not own. **Set-completion mode
   only.** Andy's rule, and it independently confirms the earliest design finding that ghost
@@ -446,7 +655,7 @@ treatment question. Agreed with Andy.
 **A ghost slot knows which card is missing. A tail pocket does not.** That difference is the
 whole of the labelling problem.
 
-### Carried to Round 3 — the unresolved bottom edge
+### Resolved at Round 3 — the unresolved bottom edge
 
 Dark cards' bottom edges measure 1.14:1 against the page in the settled treatment, and no well
 can improve it. The open question is whether the **grid** supplies it: on a full page, a card's
@@ -456,13 +665,20 @@ directional edge.
 Not testable on a single pocket. If the grid does supply it, nothing more is needed; if not,
 the bottom edge needs its own answer.
 
-### Carried to Round 3 — banding risk from the directional edge
+> **Outcome: the grid does not supply it, and it was closed anyway.** Measured 1.04:1 at the
+> edge and 1.09:1 against the neighbour's lip. Andy looked and the card reads as complete. See
+> **The Jones bottom edge** above, including the limit and the card that would test it.
+
+### Resolved at Round 3 — banding risk from the directional edge
 
 Bright-top and dark-bottom on every card, repeated down three rows, may read as **horizontal
 banding** across the page rather than as per-card lighting. The cue that works in isolation is
 the cue that repeats, and repetition is what a page adds.
 
-### Carried to Round 3 — salience of the lit empty pocket
+> **Outcome: the appearance is real and it is not ours.** It tracks card design being top-heavy
+> by convention, not the lip. Nothing to fix.
+
+### Resolved at Round 3 — salience of the lit empty pocket
 
 The stated limit of the Round 2 decision, carried to where it can be settled. On a page, does
 the lit empty pocket sit quietly among cards, or does it pull the eye to the gaps? And does the
@@ -472,19 +688,51 @@ last page of a set invert — seven lit pockets and two cards reading as a page 
 was calibrated in isolation, where it had to be bright to register at all. Settled together with
 the entry below, which is the same test from the other side.
 
-### Carried to Round 3 — test a partly-filled page, not a single empty pocket
+> **Outcome: retuned to ~40% of Round 2's lift**, and the mechanism turned out to be **area, not
+> luminance**. The inversion worried about — a last page reading as empties with two intruders —
+> does not appear at the dimmed setting.
+
+### Resolved at Round 3 — test a partly-filled page, not a single empty pocket
 
 Every empty-pocket judgement in Round 2 was made on one pocket alone, or a cluster of four. A
 single faint pocket reads as noise; nine read as structure. **The empty-pocket treatment is not
 finally judged until it is seen on a real page with some pockets filled and some not.**
 
-### Carried to Round 3 — the long-case overhang
+> **Outcome: done — three cards, six empty.** It is the test that produced the retune, and the
+> reason the Round 2 setting could not have been right.
+
+### Resolved at Round 3 — the long-case overhang, and P4
 
 The long-case scrim could overhang a few pixels **below** the card into the pocket margin,
 which would hold the covered *area* of the card roughly constant regardless of line count.
 
 This needs a gutter deep enough to receive it — the same constraint a gutter-placed reveal
 would need. **A thing to check when page layout is designed, not a design to build now.**
+
+> **Outcome: both are dead, killed by the tight gutter.** Neither has room at 2px. P4 — the
+> reveal placed in the gutter below a hovered card — was only ever an alternative to the scrim,
+> which won at Round 1. The overhang was for the 4.2% case, which wraps to five lines and
+> survives without it; confirmed on a full page.
+
+### Carried to Round 4 — the spine gap depends on the page gutter
+
+The tight gutter sets the scale everything else is read against. Whatever separates the two
+pages of a spread will read as a large break by comparison, which is probably right — a real
+binder has a spine — but **the number is not independent** and should be chosen against 2px
+rather than in isolation.
+
+### Carried to Round 4 — the page margin is uniform, and a spread's is not
+
+The 18px margin is the same on all four sides. On a spread the inner margins face each other
+across the gutter and the outer ones do not. Round 3 fixed a single number for a situation that
+has two.
+
+### Carried to Round 4 — one sheet, across two sheets
+
+Choosing one specular per page makes this specific rather than open: **a spread is two physical
+sheets under one light.** The sheen should therefore be continuous in **direction** while
+restarting at each sheet's surface. Whether that reads as one gradient across the spread or two
+aligned ones is the thing to build — and it is a question that did not exist before Round 3.
 
 ---
 
