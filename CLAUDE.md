@@ -257,6 +257,90 @@ Do not "fix" the warning by deleting a variable the template uses.
 - **Nothing personal in this repo, ever.** No database, no card images, no holdings, no
   tokens. `.gitignore` is the second line of defence; the first is not putting it here.
 
+## Reports about this machine are the only ground truth — so check them against it
+
+The planner cannot see this machine, and does not assert anything about it. The tree, the
+filesystem, a run's colour — every one of those reaches the planner as something Claude
+Code *reported*. **That makes the report the single point of failure in this method.**
+
+Three failure modes were already understood. All three are about a **signal**:
+
+1. a run went red
+2. no run appeared
+3. nothing arrived at the remote at all
+
+Each is detectable from the outside, eventually. There is a fourth, on a different axis,
+and it is not:
+
+4. **the report and the machine disagree — and the report is what gets acted on.**
+
+It has happened once. The closing report of Round 5 stated that the Round 4 design record
+was *"written but not committed"*. It had never been written. Nothing was lost, because
+nothing existed to lose. The next one might be a report that something *was checked*.
+
+**Why that specific claim, and not the others in the same report.** The instruction was
+*"write it and hold it"*, sitting in a list of prohibitions — do not push, do not change
+the sheen, do not rebuild the page-edge stack. The report was composed by walking that
+list and confirming each item. For a prohibition, compliance **is** inaction, and needs no
+evidence to report. The one positive obligation in the list got answered the way its
+neighbours did — from the instruction rather than from the disk — and nothing else in the
+turn happened to test it.
+
+**The claim was treated as needing no evidence. It was never beyond evidence.** One
+`git status` on `docs/` would have contradicted it — the record's home is a tracked file
+there — and so would re-reading the report, which asserted a clean tree in its first line
+and an uncommitted file in its last. Nothing hid; nobody
+looked. That is the whole value of this section — the failure was cheap to detect at the
+moment it was made, and became expensive only by surviving a round.
+
+The general shape to watch for: **a positive obligation whose success state is
+indistinguishable from having done nothing.** Those are the claims that most need
+evidence, and they are exactly the ones that feel like they need none.
+
+Three rules follow.
+
+- **Before reporting a file written, stat it.** A claim about the filesystem is a
+  mechanical fact and gets checked mechanically, never from memory of intent. This is the
+  rule the planner already operates under, applied to the participant who was exempt.
+- **A prompt's verify section checks the *previous* prompt's claimed outputs, not only its
+  own preconditions.** Re-deriving current state is not enough; the point is to re-test
+  what was last asserted about it. That is what caught this one, and it should be a
+  convention rather than an accident of how one prompt happened to be written.
+- **Name the location of anything reported as held, then read the report against itself.**
+  The location is what makes the claim checkable. *"Written and held"* is unfalsifiable —
+  no observation contradicts it. *"Written into `docs/design-decisions.md` and held"* is
+  falsified by one line of output, because that file is tracked and writing into it shows
+  as `modified`. A report naming no location is not merely vague; it is the specific shape
+  that hides this failure.
+
+  With the location named, the contradiction is readable without touching the disk: a clean
+  tree and an uncommitted file in `docs/` cannot both be true. Verified rather than
+  assumed — an untracked file dropped in `docs/` shows too, as `??`. Use `git status`;
+  `git diff --quiet` sees only tracked files and would miss that case.
+
+  The one escape is work held somewhere git cannot see, which is not hypothetical here: the
+  preview-opening convention was found in machine-local memory outside version control a
+  round earlier. Naming the location closes that too, because it forces the question.
+
+**A constraint on how prompts are written, not only on how they are read.** §7 of the
+prompt that produced this was a list of five prohibitions with one positive obligation
+buried inside it. A "Do not" section is a compliance checklist where inaction satisfies
+every genuine member, so it trains the reader to confirm each item without evidence — and
+the single item that needed evidence got audited the way its neighbours deserved.
+
+> **A positive obligation never goes in a prohibition list.** Give it its own section, with
+> its own expected artefact named. If it is worth requiring, it is worth being able to check.
+
+**The same rule pointing the other way — cite what the other side can open.** The planner
+once cited a decision ID and a section of a planning document as though both were checkable
+here. Neither is in this repo. Claude Code found the substance independently at
+`CLAUDE.md:95-99`, and said the citation could not be verified rather than nodding along —
+which is the behaviour this rule exists to protect.
+
+> **A reference the reader cannot open is decoration wearing the costume of evidence.** It
+> invites agreement instead of checking, which is the exact failure a diagnostic is for. Cite
+> `file:line` in this repo, or restate the substance inline.
+
 ## The cold start belongs to CI
 
 Whatever `README.md` tells a stranger to run is what CI runs, from a clean checkout.
