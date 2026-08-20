@@ -362,6 +362,27 @@ which is the behaviour this rule exists to protect.
 > invites agreement instead of checking, which is the exact failure a diagnostic is for. Cite
 > `file:line` in this repo, or restate the substance inline.
 
+**That rule has now been broken three times, each time by whoever had most recently written
+it down — so the fix is notation, not diligence.** Two forms, both mechanical.
+
+> **A citation to another repository must be visibly not-local.** Prefix it with the project:
+> `chefs-choice:README.md:12-22`. The form carries the warning, so no prose has to supply it.
+>
+> **A cross-repo citation written in local form is the worst kind.** `app.py:449-454` fails
+> loudly here and is self-correcting. `README.md:12-22` and `CLAUDE.md:41-48` resolved in
+> *this* repo to real, plausible, wrong content and gave the reader no signal at all. **A
+> citation that fails is safer than one that misleads.**
+
+> **If a file cannot be frozen, do not cite it by line.** This file cited itself at `95-99`
+> and drifted to `93-94`, because the file grew above the target. A record that cites a file
+> by line freezes that file — and `CLAUDE.md` is edited every round, so it can never be
+> frozen. **Cite living documents by heading; reserve `file:line` for things nothing is
+> allowed to rewrite.**
+>
+> `preview/*.html` is the case that qualifies: committed as evidence, excluded from the
+> formatter, and correctable only where the correction cannot change what renders. Source
+> files do not qualify — they are cited by symbol or by heading, never by line.
+
 ### Who holds the record — and it is not the side that carries the thread
 
 The arrangement assumes the executor starts fresh each session while the planner carries
