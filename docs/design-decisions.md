@@ -47,6 +47,8 @@ Three kinds, in descending order of how much weight they carry:
 | Scrim keeps its 10% show-through          | settled     | **Andy**    | looked; overruled both of us         |
 | 4-pocket is 9-pocket at 2×                | settled     | **Andy**    | overruled the planner's scaling rule |
 | One sheet of plastic, not nine            | settled     | Claude Code | argued on cost; looks identical      |
+| The minimal frame, B                      | settled     | **Andy**    | looked — overruled both of us        |
+| No page-edge stack, and none retrofitted  | settled     | Claude Code | follows from B; recorded as a loss   |
 
 ### Settled versus provisional — pending real use
 
@@ -598,6 +600,103 @@ opposite worst cases can still share a card; it just cannot be assumed.
 
 ---
 
+## Round 4 — the spread
+
+**The question was how much binder to draw.** Everything before this round was one page.
+A spread is the first thing that has to decide whether this is a *binder* on screen or a
+*grid of cards* that happens to be laid out in pages.
+
+Four frames, all at the settled page geometry, all shown at true scale:
+
+| variant | what it draws                                                      | frame cost |
+| ------- | ------------------------------------------------------------------ | ---------- |
+| A       | pages only — two sheets, a spine gap, nothing else                 | 16 px      |
+| B       | pages, a thin surrounding board, a recessed spine, no rings        | **40 px**  |
+| C       | the full binder — body, spine, rings, punched pages                | 96 px      |
+| D       | no board; the current spread punched, with the *other pages* edges | 52 px      |
+
+**Frame cost** is screen width spent on everything that is not a page, at 9-pocket.
+
+### Settled: B, the minimal frame — 40 px
+
+Andy looked and chose B, and **the choice overturned both recommendations.** Claude Code
+argued for D and proposed dropping B from the render entirely. The planner overruled the
+drop — *keep B* — and separately held a position nearer the pages-only end. Neither of us
+picked the variant that won.
+
+**B was only in front of Andy because a variant argued for dropping was kept anyway.**
+That is the second time this has decided a round; the rule was written at Round 2 and it
+earned its place again here. A variant dropped before Andy sees it is not a variant
+rejected — it is a decision taken from him by whoever did the dropping.
+
+### What each of the other three was actually testing, and why it lost
+
+- **A — pages only, 16 px.** The strongest argument on paper: binder-ness is already
+  earned by the pockets and the sheen, so drawing a body is redundant signalling that
+  costs permanent screen area forever. It loses because the two sheets have nothing to sit
+  *on*. Without a board the spread floats on the app background and the spine gap reads as
+  a gap between two grids rather than as a spine.
+
+- **C — the full binder, 96 px.** Built sympathetically, and it is the direct test of
+  whether the minimal position removes something that was working. It has the one thing
+  the others cannot fake: **immediate objecthood.** You know what it is before you read
+  anything on it. What it costs is 96 px of permanent width and a permanent claim on
+  attention — rings and a body are high-contrast structure that never changes, sitting
+  beside cards that do. On a page you open dozens of times a day, the thing that never
+  changes should not be the loudest thing in the frame.
+
+- **D — the other pages, 52 px.** Claude Code's recommendation, and the interesting loss.
+  D drew no board at all; instead it showed **the edges of the other pages** fanning into
+  the spine, driven by a real index against a real total. Thickness on the left reported
+  how far in you were; thickness on the right reported how much was left; total thickness
+  reported how much was under the current sort. **It was the only variant where the frame
+  carried information.** It lost on looking, and the loss is not disputed here.
+
+### The consequence of B, recorded so it is not quietly undone
+
+**B has no stack. So "thickness reports collection size under the current sort" is gone.**
+
+That capability existed only in D. It was a genuinely good property and it is now not
+available, and the honest record is that choosing B gave it up rather than that it was
+never worth having.
+
+> **Do not retrofit a page-edge stack into B.** If a future session finds itself adding
+> page edges to the minimal frame "just to show extent", it is rebuilding D one piece at a
+> time without the decision that would justify it. B was chosen *as* the frame without the
+> stack. Reopening that is a design decision for Andy, not a small addition.
+
+### The finding that outlived the variant it came from
+
+Working out what D's stack should measure surfaced something that is true regardless of
+whether the stack ever exists.
+
+**In set-completion mode, extent comes from the checklist, not from the holdings.** A 1987
+set is 792 cards whether Andy owns 12 of them or 700. In every other sort — by player, by
+year, by team, by value — there are no ghost slots and cards pack, so extent *is* the
+holdings.
+
+So any future indicator of "how big is this" has **two different meanings depending on the
+mode it is displayed in**, and the same visual serves both:
+
+- in set-completion mode it means **how big is this set**
+- everywhere else it means **how much do I own**
+
+That is not a bug to reconcile. Both are the right answer in their own mode; they just
+must not be implemented as one number computed one way. This is the same distinction that
+governs ghost slots, arriving from the other direction — see **two kinds of empty pocket**.
+
+### Resolved here: the two carried Round 3 margin questions
+
+- **The spine gap depends on the page gutter.** Settled at **16 px** in B, chosen against
+  the 2 px gutter rather than in isolation, with the board's own recess around it. It
+  reads as a break of a different order from the gutter, which is what a spine is.
+- **The page margin is uniform, and a spread's is not.** Settled as **mirrored**:
+  `--m-out: 12px`, `--m-in: 20px`, `--m-tb: 14px`. The inner margin is the larger one,
+  because the two inner margins face each other across the spine and read as a single
+  space; matching the outer number there would make the middle of the spread look tight.
+
+---
+
 ## Carried forward
 
 The Round 1 entries below are kept **with their original reasoning intact** so that the
@@ -714,18 +813,23 @@ would need. **A thing to check when page layout is designed, not a design to bui
 > which won at Round 1. The overhang was for the 4.2% case, which wraps to five lines and
 > survives without it; confirmed on a full page.
 
-### Carried to Round 4 — the spine gap depends on the page gutter
+### Resolved at Round 4 — the spine gap depends on the page gutter
 
 The tight gutter sets the scale everything else is read against. Whatever separates the two
 pages of a spread will read as a large break by comparison, which is probably right — a real
 binder has a spine — but **the number is not independent** and should be chosen against 2px
 rather than in isolation.
 
-### Carried to Round 4 — the page margin is uniform, and a spread's is not
+> **Outcome: 16 px, inside B's recessed spine.** See **Round 4 — the spread**.
+
+### Resolved at Round 4 — the page margin is uniform, and a spread's is not
 
 The 18px margin is the same on all four sides. On a spread the inner margins face each other
 across the gutter and the outer ones do not. Round 3 fixed a single number for a situation that
 has two.
+
+> **Outcome: mirrored, inner larger than outer** — 20 px inner, 12 px outer, 14 px top and
+> bottom. See **Round 4 — the spread**.
 
 ### Carried to Round 4 — one sheet, across two sheets
 
