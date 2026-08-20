@@ -423,6 +423,38 @@ returned an exact zero and proved nothing, because `scrollIntoView` had put both
 the same viewport position before the screenshot. It looked like evidence and was inert.
 Check that a control can actually fail before trusting that it did not.
 
+### Before trusting a table, add it up
+
+**The internal-consistency check is not only for reports.** A record whose own numbers do not
+agree is falsifiable without leaving the document — no file to open, no measurement to take,
+no second opinion to get.
+
+Round 4's frame table stated a **16 px** spine two rows from a **40 px** frame cost that is
+only arithmetic at 18: 11 px of board on each side plus an 18 px spine is 40, where 16 gives
+38. The table contained its own refutation and sat wrong for two rounds, in a document that
+was public and pushed. It cost one subtraction to catch and nobody did the subtraction.
+
+> **Numbers that derive from each other are a checksum. Compute it.** This is the same rule
+> that catches a report claiming a clean tree and an uncommitted file, applied to a record
+> instead of a message.
+
+### Correct a wrong measurement; keep a wrong argument
+
+**The two failures are not the same kind of thing, and the record should not treat them the
+same way.**
+
+- **A wrong argument teaches by being kept.** The reasoning is the artifact worth preserving,
+  and striking it hides why the record moved. This file already keeps several — the scrim
+  ruled out before it was built, the lit-sleeve prediction, the bottom edge the grid was
+  supposed to supply. Each is marked corrected and each still earns its place.
+- **A wrong measurement teaches nothing.** Nobody learns from a number that was never true,
+  and anyone reading it as a value is misled. Replace it.
+
+> **Replace the number; keep the shape of how it went wrong.** In the Round 4 case the shape
+> was *reading a value from a `:root` base rather than from the variant that was judged* —
+> and that shape recurred three times in one table. The shape is the reusable part; the wrong
+> figure is not.
+
 Claude Code's part in the same incident is recorded above: the citation that triggered it
 named the wrong prompt — the right instruction, the wrong section — one commit after the
 rule requiring verifiable citations went into this file. Both failures are real and neither
