@@ -165,6 +165,12 @@ Two corollaries, both learned the same way:
   removed. When a measurement needs pixels, capture pixels in one run and time in another;
   never in the same one.
 
+**Use `curl`, not Python's `urllib`, to reach the network from a script here.** This
+machine's Python has no CA bundle, so `urllib` fails every HTTPS request with
+`CERTIFICATE_VERIFY_FAILED: unable to get local issuer certificate`. `curl` uses the system
+trust store and works. Parse with `json.loads(..., strict=False)` — the GitHub Actions API
+returns raw control characters that strict parsing rejects.
+
 **Two caveats, so the numbers are not over-read.** The pocket derivative is still worth
 generating — for *disk* (230 MB vs 1.2 GB across the collection), not for frame time. And
 a single scrolling document of 3,000 cards *did* jank; the binder flips rather than
@@ -376,11 +382,6 @@ That will not always be true, and "ask the accused for the record" is a weak che
 > suspicion cannot be reconciled between the two of us — written down now rather than
 > improvised at the moment it is needed, because the moment it is needed is the moment
 > nobody's account can be taken on trust.
-
-Claude Code's part in the same incident is recorded above: the citation that triggered it
-named the wrong prompt — the right instruction, the wrong section — one commit after the
-rule requiring verifiable citations went into this file. Both failures are real and neither
-excuses the other.
 
 ## The decision log ships with this repo
 
