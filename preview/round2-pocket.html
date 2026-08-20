@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Round 2 — the pocket</title>
+<style>
+:root{
+  --desk:#1A1D21;                 /* L .0107 */
+  --page:#171A1F;                 /* L .0080 — the surface a pocket sits on */
+  --ink:#E8E4DC;                  /* 13.34:1 on desk — AAA */
+  --ledger:#A8845C;               /* 4.93:1 on desk — AA. serials only */
+  --ink-dim:#9A968E;              /* 5.74:1 on desk — AA */
+  --hair:#2E333A;
+  --scrim:rgba(8,9,11,.90);       /* settled Round 1 */
+  --scrim-edge:rgba(232,228,220,.18);
+  --card-w:150px; --card-h:210px; --radius:2px;
+  --inset:7px;                    /* card inset inside the sleeve */
+  --pk-w:164px; --pk-h:224px;     /* 150+2*7, 210+2*7 */
+  --cond:"Avenir Next Condensed","HelveticaNeue-CondensedBold","Roboto Condensed",
+         ui-sans-serif,system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--desk);color:var(--ink);
+  font-family:ui-sans-serif,system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1980px;margin:0 auto;padding:34px 30px 110px}
+h1{font:600 20px/1.2 var(--cond);letter-spacing:.10em;text-transform:uppercase;margin:0 0 6px}
+.sub{color:var(--ink-dim);font-size:13px;line-height:1.55;margin:0 0 22px;max-width:70ch}
+h2{font:600 14px/1.2 var(--cond);letter-spacing:.13em;text-transform:uppercase;margin:48px 0 6px}
+h3{font:600 11px/1.2 var(--cond);letter-spacing:.15em;text-transform:uppercase;margin:0 0 3px;
+   color:var(--ink)}
+.arg{color:var(--ink-dim);font-size:12.5px;line-height:1.62;margin:0 0 20px;max-width:78ch}
+.arg b{color:var(--ink)}
+.arg code{font-size:11.5px;color:var(--ink)}
+.lab{font:600 9.5px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-dim);margin:0 0 12px}
+.cap{color:var(--ink-dim);font-size:10.5px;line-height:1.5;margin:10px 0 0;width:var(--pk-w)}
+.cap b{color:var(--ink)}
+.calib{display:flex;align-items:center;gap:13px;padding:11px 13px;background:var(--page);
+  border-radius:3px;margin:0 0 30px;font-size:11.5px;color:var(--ink-dim);max-width:620px}
+.calib .bar{width:150px;height:7px;background:var(--ledger);border-radius:1px;flex:none}
+table{border-collapse:collapse;font-size:11.5px;margin:0 0 10px}
+th,td{padding:4px 15px 4px 0;text-align:left;color:var(--ink-dim);white-space:nowrap}
+th{font:600 9.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);
+  padding-bottom:7px}
+td.n{font-variant-numeric:tabular-nums;color:var(--ink)}
+td.bad{color:#D98A7A}
+.note{border-left:2px solid var(--ledger);padding:2px 0 2px 14px;margin:0 0 22px;
+  color:var(--ink-dim);font-size:12.5px;line-height:1.6;max-width:78ch}
+.note b{color:var(--ink)}
+
+/* ============ the page surface every pocket sits on ============ */
+.sheet{background:var(--page);padding:24px 20px 22px;border-radius:3px;display:inline-block}
+.row{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.cell{width:var(--pk-w)}
+
+/* ============ the pocket ============ */
+.pk{position:relative;width:var(--pk-w);height:var(--pk-h);border-radius:3px}
+.pk .well{position:absolute;inset:0;border-radius:3px}
+.pk .card{position:absolute;left:var(--inset);top:var(--inset);
+  width:var(--card-w);height:var(--card-h);border-radius:var(--radius)}
+.pk .card img{width:100%;height:100%;object-fit:cover;display:block;border-radius:var(--radius)}
+/* the plastic tenting over the card's own edge — directional, never uniform */
+.pk .lip{position:absolute;left:var(--inset);top:var(--inset);
+  width:var(--card-w);height:var(--card-h);border-radius:var(--radius);pointer-events:none;
+  z-index:2}   /* above the scrim: the card's edge does not stop where the reveal starts */
+/* sheen: a raking specular across the plastic, clipped to the pocket */
+.pk .sheen{position:absolute;inset:0;border-radius:3px;pointer-events:none;overflow:hidden}
+.pk .sheen::before{content:"";position:absolute;inset:-40%;}
+/* mouth: the sleeve's opening at the top, a doubled thickness of film */
+.pk .mouth{position:absolute;left:0;right:0;top:0;height:3px;border-radius:3px 3px 0 0;
+  pointer-events:none}
+
+/* ---------- T0 — no sleeve (Round 1 as committed) ---------- */
+.t0 .well{background:transparent}
+.t0 .card{box-shadow:0 1px 1px rgba(0,0,0,.50),0 4px 9px rgba(0,0,0,.42)}
+
+/* ---------- T1 — film. Faithful polypropylene: almost nothing ---------- */
+.t1 .well{background:#1B1E23;                       /* L .0128 */
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.045),inset -1px -1px 0 rgba(0,0,0,.22)}
+.t1 .card{box-shadow:0 1px 1px rgba(0,0,0,.50),0 3px 7px rgba(0,0,0,.44)}
+
+/* ---------- T2 — sleeve. Lit inner face + a directional lip ---------- */
+.t2 .well{background:#22262C;                       /* L .0209 */
+  background-image:linear-gradient(138deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,0) 58%);
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.085),inset -1px -1px 0 rgba(0,0,0,.34)}
+.t2 .card{box-shadow:1px 2px 3px rgba(0,0,0,.55)}
+.t2 .lip{box-shadow:inset 1px 1px 0 rgba(255,255,255,.16),inset -1px -1px 0 rgba(0,0,0,.42)}
+
+/* ---------- T3 — lit sleeve. The mechanism at full strength ---------- */
+.t3 .well{background:#2A2F36;                       /* L .0325 */
+  background-image:linear-gradient(138deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,.012) 46%,
+                   rgba(0,0,0,.16) 100%);
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.13),inset -1px -1px 0 rgba(0,0,0,.42)}
+.t3 .card{box-shadow:1px 2px 4px rgba(0,0,0,.60)}
+.t3 .lip{box-shadow:inset 1px 1px 0 rgba(255,255,255,.26),inset -1px -1px 0 rgba(0,0,0,.50)}
+.t3 .sheen::before{
+  background:linear-gradient(126deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.045) 40%,
+             rgba(255,255,255,0) 49%);}
+.t3 .mouth{box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 -1px 0 rgba(0,0,0,.30)}
+
+/* ---------- T3u — lit sleeve, UNIFORM lip. The control that decides the round ----------
+   Identical to T3 except the lip is the same brightness on all four sides. If this is what
+   the dark card needs, then the fix is a border on the card and the Round 1 deferral was
+   wrong. Directionality is the only thing being tested here. */
+.t3u .well{background:#2A2F36;
+  background-image:linear-gradient(138deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,.012) 46%,
+                   rgba(0,0,0,.16) 100%);
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.13),inset -1px -1px 0 rgba(0,0,0,.42)}
+.t3u .card{box-shadow:1px 2px 4px rgba(0,0,0,.60)}
+.t3u .lip{box-shadow:inset 0 0 0 1px rgba(255,255,255,.20)}
+.t3u .sheen::before{
+  background:linear-gradient(126deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.045) 40%,
+             rgba(255,255,255,0) 49%);}
+.t3u .mouth{box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 -1px 0 rgba(0,0,0,.30)}
+
+/* ---------- T4 — clearly a physical sleeve ---------- */
+.t4 .well{background:#333941;                       /* L .0487 */
+  background-image:linear-gradient(138deg,rgba(255,255,255,.13) 0%,rgba(255,255,255,.02) 44%,
+                   rgba(0,0,0,.20) 100%);
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.18),inset -1px -1px 0 rgba(0,0,0,.48)}
+.t4 .card{box-shadow:1px 3px 5px rgba(0,0,0,.62)}
+.t4 .lip{box-shadow:inset 1px 1px 0 rgba(255,255,255,.30),inset -1px -1px 0 rgba(0,0,0,.55)}
+/* the sheen crosses the CARD too — the plastic is in front of it. Deliberately the
+   one treatment that puts interface pixels over artwork. */
+.t4 .sheen{overflow:visible}
+.t4 .sheen::before{position:absolute;inset:0;border-radius:3px;
+  background:linear-gradient(122deg,rgba(255,255,255,0) 26%,rgba(255,255,255,.075) 37%,
+             rgba(255,255,255,.02) 44%,rgba(255,255,255,0) 52%);}
+.t4 .mouth{height:4px;box-shadow:inset 0 1px 0 rgba(255,255,255,.16),
+             inset 0 -1px 0 rgba(0,0,0,.38)}
+/* welded side seams */
+.t4 .well::after{content:"";position:absolute;top:6px;bottom:6px;left:2px;width:1px;
+  background:rgba(255,255,255,.06);box-shadow:159px 0 0 rgba(255,255,255,.05)}
+
+/* ---------- T5 — lip only. The plastic is invisible; only the card's edge tents ----------
+   Well is the page colour exactly. Tests whether the fix lives at the card boundary rather
+   than in the pocket at all. */
+.t5 .well{background:var(--page)}
+.t5 .card{box-shadow:1px 2px 4px rgba(0,0,0,.55)}
+.t5 .lip{box-shadow:inset 1px 1px 0 rgba(255,255,255,.26),inset -1px -1px 0 rgba(0,0,0,.50)}
+
+/* ---------- T6 — lit well, no card shadow ----------
+   T3 exactly, minus the card's drop shadow. Tests whether the shadow is what cancels the
+   bottom-edge step. */
+.t6 .well{background:#2A2F36;
+  background-image:linear-gradient(138deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,.012) 46%,
+                   rgba(0,0,0,.16) 100%);
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.13),inset -1px -1px 0 rgba(0,0,0,.42)}
+.t6 .card{box-shadow:none}
+.t6 .lip{box-shadow:inset 1px 1px 0 rgba(255,255,255,.26),inset -1px -1px 0 rgba(0,0,0,.50)}
+.t6 .sheen::before{background:linear-gradient(126deg,rgba(255,255,255,0) 30%,
+  rgba(255,255,255,.045) 40%,rgba(255,255,255,0) 49%);}
+.t6 .mouth{box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 -1px 0 rgba(0,0,0,.30)}
+
+/* ---------- T7 — specular only. Derived from what T1-T6 measured ----------
+   No even lift at all: the well IS the page. The plastic is evidenced only by things
+   plastic actually does — a raking specular, the mouth where the two films separate, and
+   the welded side seams. Nothing between the card and the page, so the boundary is
+   untouched; the pocket still exists when empty. */
+.t7 .well{background:var(--page)}
+.t7 .card{box-shadow:1px 2px 4px rgba(0,0,0,.55)}
+.t7 .lip{box-shadow:inset 1px 1px 0 rgba(255,255,255,.26),inset -1px -1px 0 rgba(0,0,0,.50)}
+.t7 .sheen::before{background:linear-gradient(122deg,rgba(255,255,255,0) 24%,
+  rgba(255,255,255,.055) 34%,rgba(255,255,255,.014) 41%,rgba(255,255,255,0) 50%);}
+.t7 .mouth{height:4px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),inset 0 -1px 0 rgba(0,0,0,.45)}
+.t7 .well::after{content:"";position:absolute;top:5px;bottom:5px;left:2px;width:1px;
+  background:rgba(255,255,255,.055);box-shadow:159px 0 0 rgba(255,255,255,.045),
+  0 0 0 0 rgba(0,0,0,0)}
+
+/* ---------- T8 — specular + film haze ----------
+   T7 plus the one lift that is physically honest: an empty pocket is a DOUBLE thickness of
+   film, so it is very slightly hazier than the page — 1.5%, not 25%. Tests whether that is
+   enough to make an empty pocket a container without becoming a mat. */
+.t8 .well{background:var(--page);
+  background-image:linear-gradient(138deg,rgba(255,255,255,.030) 0%,rgba(255,255,255,.012) 55%,
+                   rgba(255,255,255,.004) 100%)}
+.t8 .card{box-shadow:1px 2px 4px rgba(0,0,0,.55)}
+.t8 .lip{box-shadow:inset 1px 1px 0 rgba(255,255,255,.26),inset -1px -1px 0 rgba(0,0,0,.50)}
+.t8 .sheen::before{background:linear-gradient(122deg,rgba(255,255,255,0) 24%,
+  rgba(255,255,255,.055) 34%,rgba(255,255,255,.014) 41%,rgba(255,255,255,0) 50%);}
+.t8 .mouth{height:4px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),inset 0 -1px 0 rgba(0,0,0,.45)}
+.t8 .well::after{content:"";position:absolute;top:5px;bottom:5px;left:2px;width:1px;
+  background:rgba(255,255,255,.055);box-shadow:159px 0 0 rgba(255,255,255,.045)}
+
+/* ---------- the reveal, exactly as settled in Round 1 ---------- */
+.rv{position:absolute;left:var(--inset);right:var(--inset);
+  bottom:var(--inset);padding:6px 8px 7px;
+  background:var(--scrim);border-top:1px solid var(--scrim-edge);
+  border-radius:0 0 var(--radius) var(--radius);pointer-events:none}
+.rv .n{font:600 9px/1.25 var(--cond);letter-spacing:.09em;text-transform:uppercase;color:var(--ink)}
+.rv .l{font:500 7.5px/1.45 var(--cond);letter-spacing:.10em;text-transform:uppercase;
+  color:var(--ink-dim);font-variant-numeric:tabular-nums}
+.rv .s{color:var(--ledger)}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>Round 2 — the pocket</h1>
+<p class="sub">Five treatments, from no sleeve at all to clearly a physical sleeve. Same cards,
+same geometry, same light from the upper left. Only the plastic varies. The card treatment is
+Round 1 as committed and is untouched.</p>
+
+<div class="calib"><span class="bar"></span>
+  <span>This bar is <b style="color:var(--ink)">150 px</b> — one card wide. If it does not
+  match, your zoom is not 100%.</span></div>
+
+<h2>0 &mdash; The three that matter</h2>
+<p class="arg">The baseline, the treatment the theory predicted, and the treatment the
+measurements produced. Everything below is the working. <b>Judge this strip.</b></p>
+<div id="verdict"></div>
+
+<h2>What was measured first</h2>
+<p class="arg">Edge luminance of all nine card images, sampled per side at pocket scale
+(150&nbsp;&times;&nbsp;210), against the page at <code>#171A1F</code>, L&nbsp;=&nbsp;0.0080.
+This is what the sleeve has to fix.</p>
+<table id="edges"></table>
+<p class="arg"><b>Two corrections fall out of this.</b> Crosby is <i>not</i> a near-black card —
+its border is silver, L&nbsp;0.54&ndash;0.64, an 11.7:1 step against the page. What is dark is
+its <i>bottom third</i>, which is why it was the right card for the Round 1 scrim test and is
+the wrong one here. And <b>Nash and Judge carry black scan background on two edges each</b>
+&mdash; a crop defect, not a card property. Any sleeve judged against those is judged against a
+bar of black. Both are excluded below.</p>
+
+<h2>1 &mdash; The near-black card, all five treatments</h2>
+<p class="arg">Daniel Jones, 2023 Panini Prizm Blue Wave. Edges L&nbsp;0.12&ndash;0.20, bottom
+edge <b>L&nbsp;0.006 &mdash; a 1.04:1 step against the page</b>, which is to say none. This one
+cell is the whole round.</p>
+<div class="sheet"><div class="row" id="dark-all"></div></div>
+
+<h2>2 &mdash; The light-bordered card, all five treatments</h2>
+<p class="arg">Kevin Durant, white border, L&nbsp;0.58&ndash;0.63. Watch for a doubled edge:
+card&nbsp;white / lit&nbsp;well / rim highlight stacking into mush.</p>
+<div class="sheet"><div class="row" id="light-all"></div></div>
+
+<h2>3 &mdash; The empty pocket, all five treatments</h2>
+<p class="arg">You do not fill every page. An empty pocket is the treatment with nothing to hide
+behind: if the sleeve only convinces with a card in it, it is a frame, not a sleeve.</p>
+<div class="sheet"><div class="row" id="empty-all"></div></div>
+
+<h2>4 &mdash; The scrim up, on the near-black card</h2>
+<p class="arg">The reveal and the sleeve are two light-edged horizontals a few pixels apart. The
+scrim is inset to the card, so between its hairline and the pocket's bottom rim there is
+<code>7px</code> of lit plastic.</p>
+<div class="sheet"><div class="row" id="scrim-all"></div></div>
+
+<h2>5 &mdash; Per treatment, in context</h2>
+<p class="arg">Each treatment carrying dark, dark-uniform, light, light-silver and empty side by
+side &mdash; the comparison that catches a treatment which fixes one card by ruining another.</p>
+<div id="per-treatment"></div>
+
+<h2>6 &mdash; A small cluster</h2>
+<p class="arg">Four pockets, one of them empty. Not a page &mdash; page layout is Round 3 and
+nothing here should pre-decide it.</p>
+<div class="row" id="clusters"></div>
+
+</div>
+<script type="module">
+const C = {
+  jones:   {f:"06-jones-blue-wave.jpg", n:"Daniel Jones",   y:"2023", s:"Panini Prizm", p:"Blue Wave", ser:"/199"},
+  mcg:     {f:"09-CTRL-mcgaffigan.jpg", n:"Andy McGaffigan",y:"1988", s:"Topps",        p:null,        ser:null},
+  durant:  {f:"04-durant-rookie.jpg",   n:"Kevin Durant",   y:"2007", s:"Topps",        p:null,        ser:null},
+  crosby:  {f:"08-crosby-victory.jpg",  n:"Sidney Crosby",  y:"2006", s:"UD Ultimate Victory", p:null, ser:null},
+  harper:  {f:"03-harper-purple.jpg",   n:"Bryce Harper",   y:"2021", s:"Topps Chrome", p:"Purple", ser:null},
+};
+const T = [
+  ["t0","No sleeve","Round 1 as committed. The baseline."],
+  ["t1","Film","Faithful polypropylene. Well L .0128 — barely above the page."],
+  ["t2","Sleeve","Lit inner face, L .0209, plus a directional lip at the card's edge."],
+  ["t3","Lit sleeve","Well L .0325, graded upper-left to lower-right. Sheen, mouth, stronger lip."],
+  ["t3u","Lit sleeve, uniform lip","Identical to lit sleeve except the lip is equal on all four sides."],
+  ["t4","Physical","Well L .0487. Sheen crosses the card. Seams. Mouth doubled."],
+  ["t5","Lip only","Well = page exactly. Only the card's own edge tents. Diagnostic."],
+  ["t6","Lit well, no shadow","Lit sleeve minus the card's drop shadow. Diagnostic."],
+  ["t7","Specular only","Well = page. Plastic evidenced by specular, mouth and seams only."],
+  ["t8","Specular + film haze","T7 plus a 1.5% haze — a double thickness of film, honestly sized."],
+];
+
+const reveal = c => `<div class="rv"><div class="n">${c.n}</div>
+  <div class="l">${c.y} &middot; ${c.s}</div>
+  ${c.p?`<div class="l">${c.p}</div>`:""}${c.ser?`<div class="l s">${c.ser}</div>`:""}</div>`;
+
+const pocket = (t, c, {scrim=false}={}) => `<div class="pk ${t}">
+  <div class="well"></div>
+  ${c?`<div class="card"><img src="img/${c.f}" alt=""></div><div class="lip"></div>`:""}
+  ${t!=="t0"?'<div class="sheen"></div><div class="mouth"></div>':""}
+  ${scrim&&c?reveal(c):""}</div>`;
+
+const strip = (id, c, opts={}) => {
+  document.getElementById(id).innerHTML = T.map(([t,name,desc]) =>
+    `<div class="cell"><div class="lab">${name}</div>${pocket(t,c,opts)}
+     <p class="cap">${desc}</p></div>`).join("");
+};
+strip("dark-all",  C.jones);
+strip("light-all", C.durant);
+strip("empty-all", null);
+strip("scrim-all", C.jones, {scrim:true});
+
+// 5 — per treatment
+const SET = [[C.jones,"dark"],[C.mcg,"dark, uniform"],[C.durant,"light"],
+             [C.crosby,"light silver"],[null,"empty"]];
+document.getElementById("per-treatment").innerHTML = T.map(([t,name,desc]) =>
+  `<h3>${name}</h3><p class="arg" style="margin-bottom:12px">${desc}</p>
+   <div class="sheet" style="margin-bottom:26px"><div class="row">${
+    SET.map(([c,l])=>`<div class="cell">${pocket(t,c)}<p class="cap">${l}</p></div>`).join("")
+   }</div></div>`).join("");
+
+// 0 — verdict strip
+const V=[["t0","No sleeve","Round 1 as committed"],
+         ["t3","Lit sleeve","what the theory predicted"],
+         ["t7","Specular only","what the measurements produced"]];
+const VS=[[C.jones,"near-black card"],[C.durant,"light-bordered card"],
+          [null,"empty pocket"],[C.jones,"scrim up, dark card"]];
+document.getElementById("verdict").innerHTML = V.map(([t,name,why])=>
+  `<h3>${name} <span style="color:var(--ink-dim);font-weight:400;letter-spacing:.02em;
+    text-transform:none">&mdash; ${why}</span></h3>
+   <div class="sheet" style="margin:8px 0 26px"><div class="row">${
+    VS.map(([c,l],i)=>`<div class="cell">${pocket(t,c,{scrim:i===3})}
+      <p class="cap">${l}</p></div>`).join("")}</div></div>`).join("");
+
+// 6 — clusters
+document.getElementById("clusters").innerHTML = T.slice(1).map(([t,name]) =>
+  `<div><div class="lab">${name}</div><div class="sheet"><div style="display:grid;
+    grid-template-columns:repeat(2,var(--pk-w));gap:18px">
+    ${pocket(t,C.jones)}${pocket(t,C.durant)}${pocket(t,C.harper)}${pocket(t,null)}
+  </div></div></div>`).join("");
+
+// ---- measured edge table, computed live from the images ----
+const lum=(r,g,b)=>{const f=c=>{c/=255;return c<=.04045?c/12.92:((c+.055)/1.055)**2.4};
+  return .2126*f(r)+.7152*f(g)+.0722*f(b)};
+const K=(a,b)=>{const[h,l]=a>b?[a,b]:[b,a];return (h+.05)/(l+.05)};
+const PAGE=lum(0x17,0x1A,0x1F);
+const FILES=["02-cole-auto-ref.jpg","03-harper-purple.jpg","04-durant-rookie.jpg",
+ "05-nash-1957.jpg","06-jones-blue-wave.jpg","07-judge-bdpp19.jpg","08-crosby-victory.jpg",
+ "09-CTRL-mcgaffigan.jpg","10-CTRL-schaefer.jpg"];
+const BAD={"05-nash-1957.jpg":"black bar R + B","07-judge-bdpp19.jpg":"black bar T + R"};
+// Measured live where the browser allows it. Opened straight from disk, canvas pixel
+// reads are blocked as cross-origin, so the numbers measured over http are the fallback —
+// they are the same numbers, not invented ones.
+const FALLBACK={
+ "02-cole-auto-ref.jpg":[.345,.399,.400,.345],"03-harper-purple.jpg":[.171,.148,.221,.158],
+ "04-durant-rookie.jpg":[.601,.589,.627,.583],"05-nash-1957.jpg":[.301,.003,.255,.003],
+ "06-jones-blue-wave.jpg":[.145,.120,.203,.006],"07-judge-bdpp19.jpg":[.596,.025,.003,.390],
+ "08-crosby-victory.jpg":[.538,.565,.642,.566],"09-CTRL-mcgaffigan.jpg":[.194,.188,.107,.097],
+ "10-CTRL-schaefer.jpg":[.718,.688,.763,.553]};
+let measured=true;
+const rows=[`<tr><th>card</th><th>left</th><th>right</th><th>top</th><th>bottom</th>
+  <th>weakest vs page</th><th></th></tr>`];
+for(const fn of FILES){
+  let L,R,Tp,B;
+  try{
+    const im=new Image(); im.src="img/"+fn; await im.decode();
+    const cv=document.createElement("canvas"); cv.width=150; cv.height=210;
+    const g=cv.getContext("2d",{willReadFrequently:true}); g.drawImage(im,0,0,150,210);
+    const d=g.getImageData(0,0,150,210).data;
+    const at=(x,y)=>{const i=(y*150+x)*4;return [d[i],d[i+1],d[i+2]]};
+    const mean=(pick,n)=>{const q=[];for(let i=0;i<n;i++)q.push(pick(i));
+      const m=[0,1,2].map(j=>q.reduce((s,v)=>s+v[j],0)/q.length);return lum(...m)};
+    L=mean(y=>at(1,y),210); R=mean(y=>at(148,y),210);
+    Tp=mean(x=>at(x,1),150); B=mean(x=>at(x,208),150);
+  }catch(e){ measured=false; [L,R,Tp,B]=FALLBACK[fn]; }
+  const worst=Math.min(L,R,Tp,B);
+  rows.push(`<tr><td>${fn.replace(/^\d+-(CTRL-)?/,"").replace(".jpg","")}</td>
+    <td class="n">${L.toFixed(3)}</td><td class="n">${R.toFixed(3)}</td>
+    <td class="n">${Tp.toFixed(3)}</td><td class="n">${B.toFixed(3)}</td>
+    <td class="n">${K(worst,PAGE).toFixed(2)}:1</td>
+    <td class="${BAD[fn]?"bad":""}">${BAD[fn]||""}</td></tr>`);
+}
+document.getElementById("edges").innerHTML=rows.join("");
+document.getElementById("edges").insertAdjacentHTML("afterend",
+  `<p class="arg" style="margin-top:0;font-size:11px">${measured
+    ? "Measured live in this browser from the images themselves."
+    : "Opened from disk, so pixel reads are blocked — showing the same figures measured over http."}</p>`);
+</script>
+</body></html>

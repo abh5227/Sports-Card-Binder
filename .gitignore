@@ -33,6 +33,18 @@ binder-data/
 *.key
 secrets.json
 
+# --- design previews: the pages ship, the images never do ---------------------
+# docs/design-decisions.md cites these files by line. A record that cites files
+# absent from the repo is a broken citation, so the previews are committed.
+#
+# Deny by default and allow back only what is safe. The scans under preview/img
+# are copyright-encumbered and preview/shots holds screenshots OF them, so an
+# allow-list is the wrong posture here: a new image dropped into preview/ must be
+# ignored by default rather than committed because nobody added a rule for it.
+preview/*
+!preview/*.html
+!preview/README.md
+
 # --- build output and dependencies -------------------------------------------
 node_modules/
 dist/

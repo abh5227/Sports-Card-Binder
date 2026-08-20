@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Round 3b — the proportional scrim at 4-pocket</title>
+<style>
+:root{
+  --desk:#1A1D21; --page:#171A1F;
+  --ink:#E8E4DC;      /* 13.34:1 on desk — AAA */
+  --ledger:#A8845C;   /* 4.93:1 on desk — AA */
+  --ink-dim:#9A968E;  /* 5.74:1 on desk — AA */
+  --scrim:rgba(8,9,11,.90); --scrim-edge:rgba(232,228,220,.18);
+  --well:#20242A; --well-hi:.06; --well-rim:.085;
+  --k:1;                       /* THE WHOLE RULE: 4-pocket is 9-pocket at k=2 */
+  --cond:"Avenir Next Condensed","HelveticaNeue-CondensedBold","Roboto Condensed",
+         ui-sans-serif,system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--desk);color:var(--ink);
+  font-family:ui-sans-serif,system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1500px;margin:0 auto;padding:34px 30px 110px}
+h1{font:600 20px/1.2 var(--cond);letter-spacing:.10em;text-transform:uppercase;margin:0 0 6px}
+h2{font:600 14px/1.2 var(--cond);letter-spacing:.13em;text-transform:uppercase;margin:50px 0 6px}
+.sub{color:var(--ink-dim);font-size:13px;line-height:1.55;margin:0 0 20px;max-width:74ch}
+.arg{color:var(--ink-dim);font-size:12.5px;line-height:1.62;margin:0 0 18px;max-width:82ch}
+.arg b{color:var(--ink)} .arg code{font-size:11.5px;color:var(--ink)}
+.cap{color:var(--ink-dim);font-size:11px;line-height:1.5;margin:10px 0 0}
+.cap b{color:var(--ink)}
+.calib{display:flex;align-items:center;gap:13px;padding:11px 13px;background:var(--page);
+  border-radius:3px;margin:0 0 20px;font-size:11.5px;color:var(--ink-dim);max-width:640px}
+.calib .bar{width:150px;height:7px;background:var(--ledger);border-radius:1px;flex:none}
+.rowx{display:flex;gap:36px;align-items:flex-start;flex-wrap:wrap}
+table{border-collapse:collapse;font-size:11.5px;margin:0 0 12px}
+th,td{padding:4px 16px 4px 0;text-align:left;color:var(--ink-dim);white-space:nowrap}
+th{font:600 9.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);
+  padding-bottom:7px}
+td.n{font-variant-numeric:tabular-nums;color:var(--ink)}
+
+.page{position:relative;background:var(--page);padding:var(--pad);border-radius:3px;
+  display:inline-block}
+.grid{display:grid;gap:var(--gut);
+  grid-template-columns:repeat(var(--cols,3),calc(var(--card-w) + 2*var(--inset)))}
+.page .sheet-sheen{position:absolute;inset:0;border-radius:3px;pointer-events:none;z-index:3;
+  background:linear-gradient(122deg,rgba(255,255,255,0) 24%,rgba(255,255,255,.055) 34%,
+    rgba(255,255,255,.014) 41%,rgba(255,255,255,0) 50%)}
+
+.pk{position:relative;width:calc(var(--card-w) + 2*var(--inset));
+  height:calc(var(--card-h) + 2*var(--inset));border-radius:3px}
+.pk .well{position:absolute;inset:0;border-radius:3px;background:var(--page);z-index:1}
+.pk.empty .well{background:var(--well);
+  background-image:linear-gradient(138deg,rgba(255,255,255,var(--well-hi)) 0%,
+    rgba(255,255,255,calc(var(--well-hi)*.12)) 46%,rgba(0,0,0,.16) 100%);
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,var(--well-rim)),
+             inset -1px -1px 0 rgba(0,0,0,.42)}
+.pk .mouth{position:absolute;left:0;right:0;top:0;height:calc(4px * var(--k));
+  border-radius:3px 3px 0 0;pointer-events:none;z-index:2;
+  box-shadow:inset 0 calc(1px*var(--k)) 0 rgba(255,255,255,.13),
+             inset 0 calc(-1px*var(--k)) 0 rgba(0,0,0,.45)}
+.pk .card{position:absolute;left:var(--inset);top:var(--inset);z-index:2;
+  width:var(--card-w);height:var(--card-h);border-radius:var(--radius);
+  box-shadow:calc(1px*var(--k)) calc(2px*var(--k)) calc(4px*var(--k)) rgba(0,0,0,.55)}
+.pk .card img{width:100%;height:100%;object-fit:cover;display:block;border-radius:var(--radius)}
+/* UI sits ABOVE the plastic; the card's own edge sits above the label */
+.rv{position:absolute;left:var(--inset);right:var(--inset);bottom:var(--inset);z-index:4;
+  padding:calc(6px*var(--k)) calc(8px*var(--k)) calc(7px*var(--k));
+  background:var(--scrim);border-top:calc(1px*var(--k)) solid var(--scrim-edge);
+  border-radius:0 0 var(--radius) var(--radius);pointer-events:none}
+.rv .n{font:600 calc(9px*var(--k))/1.25 var(--cond);letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink)}
+.rv .l{font:500 calc(7.5px*var(--k))/1.45 var(--cond);letter-spacing:.10em;
+  text-transform:uppercase;color:var(--ink-dim);font-variant-numeric:tabular-nums}
+.rv .s{color:var(--ledger)}
+.pk .lip{position:absolute;left:var(--inset);top:var(--inset);z-index:5;
+  width:var(--card-w);height:var(--card-h);border-radius:var(--radius);pointer-events:none;
+  box-shadow:inset calc(1px*var(--k)) calc(1px*var(--k)) 0 rgba(255,255,255,.26),
+             inset calc(-1px*var(--k)) calc(-1px*var(--k)) 0 rgba(0,0,0,.50)}
+
+/* The derived geometry MUST be declared on the same element that sets --k.
+   A custom property containing var() is substituted at computed-value time on the element
+   that DECLARES it — so deriving --card-w from --k on :root freezes it at :root's --k, and a
+   descendant overriding --k moves the type (a real property using var() directly) while
+   leaving the geometry behind. Found by measuring: card stayed 150px while type doubled. */
+.scale{
+  --card-w:calc(150px * var(--k)); --card-h:calc(210px * var(--k));
+  --inset:calc(7px * var(--k));    --radius:calc(2px * var(--k));
+  --gut:calc(2px * var(--k));      --pad:calc(18px * var(--k));
+}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>Round 3b &mdash; the proportional scrim at 4-pocket</h1>
+<p class="sub"><b>One rule: 4-pocket is 9-pocket at 2&times;.</b> Card, sleeve inset, gutter,
+page margin, scrim padding, scrim type, hairline and lip all scale by the same factor. The
+9-pocket page is unchanged by construction &mdash; it is this stylesheet at
+<code>--k: 1</code>.</p>
+
+<div class="calib"><span class="bar"></span>
+  <span>This bar is <b style="color:var(--ink)">150 px</b> — one card at 9-pocket. If it does
+  not match, your zoom is not 100%.</span></div>
+
+<h2>1 &mdash; Typical content, both layouts</h2>
+<p class="arg">The scrim should look identical, only bigger. Nothing here is a new decision;
+this is the check that the rule produces what it claims.</p>
+<div class="rowx" id="typical"></div>
+
+<h2>2 &mdash; The worst-case set name at 4-pocket</h2>
+<p class="arg"><b>This is the one to watch, and the reason this is a preview and not a
+decision.</b> The longest of 1,210 real set names, 48 characters. At 9-pocket you are scanning
+past a card; at 4-pocket you are examining one deliberately. Covering the same fraction of a
+card you chose to look at may feel worse than covering it while skimming.</p>
+<div class="rowx" id="worst"></div>
+<div id="cover"></div>
+
+<h2>3 &mdash; The worst case in a full 4-pocket page</h2>
+<p class="arg">One card hovered among three that are not, plus an empty pocket at the retuned
+setting. The isolated card above overstates the problem — nothing else is competing with it.</p>
+<div id="worstpage"></div>
+
+</div>
+<script type="module">
+const C={
+  jones: {f:"06-jones-blue-wave.jpg", n:"Daniel Jones",  y:"2023", s:"Panini Prizm", p:"Blue Wave", ser:"/199"},
+  crosby:{f:"08-crosby-victory.jpg",  n:"Sidney Crosby", y:"2006", s:"UD Ultimate Victory", p:null, ser:null},
+  // the genuine worst case: longest real set name + a parallel + a serial. Five lines.
+  // Same combination Round 1c measured at 40-48% coverage.
+  worst: {f:"08-crosby-victory.jpg",  n:"Sidney Crosby", y:"2025",
+          s:"Upper Deck Tim Hortons Team Canada Gold Medalist", p:"Gold", ser:"/25"},
+  durant:{f:"04-durant-rookie.jpg",   n:"Kevin Durant",  y:"2007", s:"Topps", p:null, ser:null},
+  harper:{f:"03-harper-purple.jpg",   n:"Bryce Harper",  y:"2021", s:"Topps Chrome", p:"Purple", ser:null},
+};
+const WORST="Upper Deck Tim Hortons Team Canada Gold Medalist";
+const reveal=(c,setName)=>`<div class="rv"><div class="n">${c.n}</div>
+  <div class="l">${c.y} &middot; ${setName||c.s}</div>
+  ${c.p?`<div class="l">${c.p}</div>`:""}${c.ser?`<div class="l s">${c.ser}</div>`:""}</div>`;
+const pocket=(c,o={})=>`<div class="pk ${c?"filled":"empty"}"><div class="well"></div>
+  ${c?`<div class="card"><img src="img/${c.f}" alt=""></div>`:""}
+  <div class="mouth"></div>${c&&o.scrim?reveal(c,o.setName):""}
+  ${c?'<div class="lip"></div>':""}</div>`;
+const page=(cards,{cols=3,k=1,hover=-1,setName=null}={})=>
+  `<div class="page scale" style="--cols:${cols};--k:${k}">
+    <div class="grid">${cards.map((c,i)=>pocket(c,{scrim:i===hover,setName})).join("")}</div>
+    <div class="sheet-sheen"></div></div>`;
+const solo=(c,{k=1,setName=null}={})=>
+  `<div class="page scale" style="--cols:1;--k:${k}"><div class="grid">
+    ${pocket(c,{scrim:true,setName})}</div><div class="sheet-sheen"></div></div>`;
+
+document.getElementById("typical").innerHTML =
+  `<div>${solo(C.jones,{k:1})}<p class="cap"><b>9-pocket</b> &mdash; <code>--k: 1</code>.
+    Unchanged.</p></div>
+   <div>${solo(C.jones,{k:2})}<p class="cap"><b>4-pocket</b> &mdash; <code>--k: 2</code>. Same
+    scrim, twice the size.</p></div>`;
+document.getElementById("worst").innerHTML =
+  `<div>${solo(C.worst,{k:1})}<p class="cap"><b>9-pocket, worst case.</b>
+    Five lines. Recorded at Round 1 as 40&ndash;48% coverage.</p></div>
+   <div>${solo(C.worst,{k:2})}<p class="cap"><b>4-pocket, worst case.</b> Same
+    five lines, same fraction &mdash; but of a card you are deliberately examining.</p></div>`;
+document.getElementById("worstpage").innerHTML =
+  page([C.worst,C.durant,C.jones,null],{cols:2,k:2,hover:0});
+
+// measured coverage, from the DOM rather than asserted
+requestAnimationFrame(()=>{
+  const rows=[...document.querySelectorAll("#worst .pk")].map((pk,i)=>{
+    const card=pk.querySelector(".card").getBoundingClientRect();
+    const rv=pk.querySelector(".rv").getBoundingClientRect();
+    return [i===0?"9-pocket":"4-pocket", Math.round(card.width)+"×"+Math.round(card.height),
+      Math.round(rv.height)+"px", (rv.height/card.height*100).toFixed(1)+"%"];
+  });
+  document.getElementById("cover").innerHTML =
+    `<table><tr><th>layout</th><th>card</th><th>scrim height</th><th>coverage</th></tr>`+
+    rows.map(r=>`<tr><td>${r[0]}</td><td class="n">${r[1]}</td><td class="n">${r[2]}</td>
+      <td class="n">${r[3]}</td></tr>`).join("")+`</table>
+    <p class="arg" style="margin-top:0">Measured from the rendered elements. Identical
+    percentages are the rule working: <b>the same fraction, at both sizes.</b></p>`;
+});
+</script>
+</body></html>

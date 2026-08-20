@@ -1,0 +1,14 @@
+<!doctype html><meta charset=utf-8>
+<body style="background:#555;margin:0;padding:10px;display:flex;gap:10px">
+<div><div style="color:#fff;font:11px sans-serif">nash TL</div>
+<canvas id=a width=240 height=240 style="image-rendering:pixelated"></canvas></div>
+<div><div style="color:#fff;font:11px sans-serif">jones TL</div>
+<canvas id=b width=240 height=240 style="image-rendering:pixelated"></canvas></div>
+<div><div style="color:#fff;font:11px sans-serif">crosby TL</div>
+<canvas id=c width=240 height=240 style="image-rendering:pixelated"></canvas></div>
+<script type=module>
+const load=async(fn,id)=>{const im=new Image();im.src='img/'+fn;await im.decode();
+ const g=document.getElementById(id).getContext('2d');g.imageSmoothingEnabled=false;
+ g.drawImage(im,0,0,20,20,0,0,240,240);};
+await load('05-nash-1957.jpg','a');await load('06-jones-blue-wave.jpg','b');await load('08-crosby-victory.jpg','c');
+</script>

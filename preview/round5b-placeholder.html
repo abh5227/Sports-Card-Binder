@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Placeholder — Round 5 — the page turn</title>
+<style>
+:root{
+  --desk:#1A1D21; --page:#171A1F;
+  --ink:#E8E4DC;      /* 13.34:1 on desk — AAA */
+  --ledger:#A8845C;   /* 4.93:1 on desk — AA */
+  --ink-dim:#9A968E;  /* 5.74:1 on desk — AA */
+  --scrim:rgba(8,9,11,.90); --scrim-edge:rgba(232,228,220,.18);
+  --well:#20242A; --well-hi:.06; --well-rim:.085;
+  --card-w:150px; --card-h:210px; --inset:7px; --radius:2px;
+  --gut:2px; --m-out:12px; --m-in:20px; --m-tb:14px; --spine:18px;
+  --dur:420ms;
+  --cond:"Avenir Next Condensed","HelveticaNeue-CondensedBold","Roboto Condensed",
+         ui-sans-serif,system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--desk);color:var(--ink);
+  font-family:ui-sans-serif,system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1300px;margin:0 auto;padding:34px 26px 120px}
+h1{font:600 20px/1.2 var(--cond);letter-spacing:.10em;text-transform:uppercase;margin:0 0 6px}
+h2{font:600 14px/1.2 var(--cond);letter-spacing:.13em;text-transform:uppercase;margin:52px 0 6px}
+.sub{color:var(--ink-dim);font-size:13px;line-height:1.55;margin:0 0 18px;max-width:78ch}
+.arg{color:var(--ink-dim);font-size:12.5px;line-height:1.62;margin:0 0 14px;max-width:84ch}
+.arg b{color:var(--ink)} .arg code{font-size:11.5px;color:var(--ink)}
+.cap{color:var(--ink-dim);font-size:11px;line-height:1.5;margin:10px 0 0;max-width:84ch}
+.cap b{color:var(--ink)}
+.calib{display:flex;align-items:center;gap:13px;padding:11px 13px;background:var(--page);
+  border-radius:3px;margin:0 0 16px;font-size:11.5px;color:var(--ink-dim);max-width:640px}
+.calib .bar{width:150px;height:7px;background:var(--ledger);border-radius:1px;flex:none}
+.plain{border-left:2px solid var(--ledger);padding:3px 0 3px 14px;margin:0 0 22px;
+  color:var(--ink-dim);font-size:12.5px;line-height:1.6;max-width:84ch}
+.plain b{color:var(--ink)}
+button{font:600 10px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink);background:#252A31;border:1px solid #343A43;border-radius:3px;
+  padding:8px 13px;cursor:pointer}
+button:hover{background:#2E343C}
+button:disabled{opacity:.4;cursor:default}
+.ctl{display:flex;gap:8px;align-items:center;margin:0 0 14px;flex-wrap:wrap}
+.ctl .lab{font:600 9.5px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-dim);margin-right:4px}
+button.on{background:var(--ledger);border-color:var(--ledger);color:#14161A}
+.readout{font-size:11.5px;color:var(--ink-dim);font-variant-numeric:tabular-nums;
+  margin-left:6px}
+.readout b{color:var(--ink)}
+.readout .bad{color:#E08C7A}
+table{border-collapse:collapse;font-size:11.5px;margin:10px 0}
+th,td{padding:4px 16px 4px 0;text-align:left;color:var(--ink-dim);white-space:nowrap}
+th{font:600 9.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);
+  padding-bottom:7px}
+td.n{font-variant-numeric:tabular-nums;color:var(--ink)}
+td.bad{color:#E08C7A}
+
+/* ============ pocket / card / reveal — Rounds 1-3, unchanged ============ */
+.grid{display:grid;gap:var(--gut);
+  grid-template-columns:repeat(3,calc(var(--card-w) + 2*var(--inset)))}
+.pk{position:relative;width:calc(var(--card-w) + 2*var(--inset));
+  height:calc(var(--card-h) + 2*var(--inset));border-radius:3px}
+.pk .well{position:absolute;inset:0;border-radius:3px;background:var(--page);z-index:1}
+.pk.empty .well{background:var(--well);
+  background-image:linear-gradient(138deg,rgba(255,255,255,var(--well-hi)) 0%,
+    rgba(255,255,255,calc(var(--well-hi)*.12)) 46%,rgba(0,0,0,.16) 100%);
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,var(--well-rim)),
+             inset -1px -1px 0 rgba(0,0,0,.42)}
+.pk .mouth{position:absolute;left:0;right:0;top:0;height:4px;border-radius:3px 3px 0 0;
+  pointer-events:none;z-index:2;box-shadow:inset 0 1px 0 rgba(255,255,255,.13),
+  inset 0 -1px 0 rgba(0,0,0,.45)}
+.pk .card{position:absolute;left:var(--inset);top:var(--inset);z-index:2;
+  width:var(--card-w);height:var(--card-h);border-radius:var(--radius);
+  box-shadow:1px 2px 4px rgba(0,0,0,.55)}
+.pk .card img{width:100%;height:100%;object-fit:cover;display:block;border-radius:var(--radius)}
+.pk .lip{position:absolute;left:var(--inset);top:var(--inset);z-index:5;
+  width:var(--card-w);height:var(--card-h);border-radius:var(--radius);pointer-events:none;
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.26),inset -1px -1px 0 rgba(0,0,0,.50)}
+
+/* ============ page + FRAME B — decided, minimal frame ============ */
+.page{position:relative;background:var(--page);
+  padding:var(--m-tb) var(--m-out) var(--m-tb) var(--m-in)}
+.page.lft{padding:var(--m-tb) var(--m-in) var(--m-tb) var(--m-out)}
+/* SHEEN — Model 2, shallow V. Per-sheet, so a turning sheet owns its own band. */
+.page .sheet-sheen{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.page .sheet-sheen i{position:absolute;top:-30%;bottom:-30%;left:0;right:0;display:block}
+.page.lft .sheet-sheen i{
+  background:linear-gradient(122deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.070) 44%,
+    rgba(255,255,255,.020) 53%,rgba(255,255,255,0) 64%)}
+.page:not(.lft) .sheet-sheen i{
+  background:linear-gradient(122deg,rgba(255,255,255,0) 4%,rgba(255,255,255,.041) 17%,
+    rgba(255,255,255,.012) 25%,rgba(255,255,255,0) 36%)}
+.frame{position:relative;display:inline-block;padding:11px}
+.board{position:absolute;inset:0;border-radius:3px;background:#20242A;
+  box-shadow:0 1px 2px rgba(0,0,0,.55),0 10px 24px rgba(0,0,0,.45),
+             inset 0 1px 0 rgba(255,255,255,.055)}
+.spread{display:flex;align-items:stretch;position:relative;width:max-content}
+.spine{width:var(--spine);flex:none;position:relative;
+  background:linear-gradient(to right,rgba(0,0,0,.55),rgba(0,0,0,.30) 50%,rgba(0,0,0,.55));
+  box-shadow:inset 1px 0 0 rgba(0,0,0,.5),inset -1px 0 0 rgba(0,0,0,.5)}
+.page{box-shadow:0 1px 2px rgba(0,0,0,.45)}
+
+/* ============ the turn ============ */
+.stage{position:relative;perspective:1900px;perspective-origin:50% 45%}
+.leaf{position:absolute;top:0;transform-origin:left center;transform-style:preserve-3d;
+  will-change:transform;z-index:9}
+.leaf .face{position:absolute;top:0;left:0;backface-visibility:hidden;
+  -webkit-backface-visibility:hidden}
+.leaf .face.bk{transform:rotateY(180deg)}
+.leaf .shade{position:absolute;inset:0;pointer-events:none;background:#05060a;opacity:0;
+  will-change:opacity}
+.leaf .blank{background:var(--page);width:100%;height:100%;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}
+.fade{will-change:opacity}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>Round 5 &mdash; the page turn</h1>
+<p class="sub">Four ways to get from one spread to the next, inside the <b>minimal frame</b>
+decided at Round 4. Cards, pockets, gutters, margins, sheen and frame are constant. <b>Only the
+transition varies.</b> Press the buttons — this is a looking question.</p>
+
+<div class="calib"><span class="bar"></span>
+  <span>This bar is <b style="color:var(--ink)">150 px</b> — one card. If it does not match,
+  your zoom is not 100%.</span></div>
+
+<p class="plain"><b>Nothing here is decided.</b> Whether one leaf turns or both, whether the
+back of a turned page shows pockets, how long it takes, whether cards ride through the turn —
+all of it is open, and each variant answers it differently on purpose. Every panel reports its
+own <b>worst frame</b> live. The budget is <b>8.33 ms</b> at 120 Hz.</p>
+
+<div class="ctl">
+  <span class="lab">Duration</span>
+  <button data-dur="260">260 ms</button>
+  <button data-dur="420" class="on">420 ms</button>
+  <button data-dur="600">600 ms</button>
+  <button data-dur="900">900 ms</button>
+  <span style="margin-left:18px"></span>
+  <button data-hold="1">Hold every image &mdash; placeholders only</button>
+  <button data-hold="0" class="on">Images as normal</button>
+  <span class="readout" style="margin-left:14px">Applies to every variant below.</span>
+</div>
+
+<h2>T1 &mdash; Cross-fade. No flip at all.</h2>
+<p class="arg">The honest baseline: the outgoing spread fades out, the incoming fades in. No 3D,
+no second face, nothing rotating. <b>If this reads well enough, everything below is cost for
+nothing</b> — and it is the only variant with no failure mode at the ends of the binder.</p>
+<div class="ctl"><button data-go="t1">Turn &rarr;</button>
+  <button data-back="t1">&larr; Back</button><span class="readout" id="r-t1"></span></div>
+<div id="t1"></div>
+
+<h2>T2 &mdash; One leaf turns, blank back</h2>
+<p class="arg">The right-hand sheet rotates about the spine and lands on the left. Its reverse
+is <b>plain page</b>, no pockets — cheap, because only one face is ever rendered. It is also a
+lie about the object: a real binder page has pockets on both sides.</p>
+<div class="ctl"><button data-go="t2">Turn &rarr;</button>
+  <button data-back="t2">&larr; Back</button><span class="readout" id="r-t2"></span></div>
+<div id="t2"></div>
+
+<h2>T3 &mdash; One leaf turns, double-sided, cards ride</h2>
+<p class="arg">The faithful one. The turning leaf's reverse is <b>the next spread's left
+page</b>, with its cards already in their pockets, so the leaf carries real content both ways
+and the next spread is assembled by the turn rather than after it. Two rendered faces, both
+populated, plus a moving highlight and a shading pass through the arc.</p>
+<div class="ctl"><button data-go="t3">Turn &rarr;</button>
+  <button data-back="t3">&larr; Back</button><span class="readout" id="r-t3"></span></div>
+<div id="t3"></div>
+
+<h2>T4 &mdash; Double-sided, but the leaf turns empty and fills on arrival</h2>
+<p class="arg">Same shape as T3. The turning leaf shows <b>pockets but no cards</b>; the cards
+fade into their pockets once it lands. If T3 cannot hold the frame budget this is the fallback
+that keeps the physical reading and drops the paint cost.</p>
+<div class="ctl"><button data-go="t4">Turn &rarr;</button>
+  <button data-back="t4">&larr; Back</button><span class="readout" id="r-t4"></span></div>
+<div id="t4"></div>
+
+<h2>The ends &mdash; there is no spread before the first</h2>
+<p class="arg">Shown on T3. Going back from the first spread has nothing to turn. A refusal has
+to be visible or the control reads as broken.</p>
+<div class="ctl"><button data-endtest="1">&larr; Back, at the first spread</button>
+  <span class="readout" id="r-end"></span></div>
+<div id="tend"></div>
+
+<h2>Measured &mdash; worst frame, not average</h2>
+<p class="arg">Each variant run and instrumented. Spike 01's 36.7 ms figure was a <b>content
+swap</b>, not a 3D transform with two rendered faces; it does not transfer.</p>
+<div class="ctl"><button data-runall="1">Run all four, 5 turns each</button>
+  <span class="readout" id="r-all"></span></div>
+<div id="meas"></div>
+
+</div>
+<script type="module">
+const R={
+  durant:{f:"04-durant-rookie.jpg"},jones:{f:"06-jones-blue-wave.jpg"},
+  schaef:{f:"10-CTRL-schaefer.jpg"},mcg:{f:"09-CTRL-mcgaffigan.jpg"},
+  cole:{f:"02-cole-auto-ref.jpg"},nash:{f:"05-nash-1957-fix.jpg"},
+  crosby:{f:"08-crosby-victory.jpg"},harper:{f:"03-harper-purple.jpg"},
+  judge:{f:"07-judge-bdpp19.jpg"},harp2:{f:"01-harper-baserc.jpg"},
+};
+const L=[...Array(12)].map((_,i)=>({f:`loc-${String(i+1).padStart(2,"0")}.jpg`}));
+const POOL=[R.jones,L[0],R.durant,L[1],R.mcg,L[2],R.cole,L[3],R.nash,
+            L[4],R.harp2,R.judge,R.crosby,L[5],L[6],L[7],R.harper,R.schaef,
+            L[8],L[9],L[10],L[11]];
+// three spreads' worth, rotated through the pool so consecutive pages differ visibly
+const pageOf=(k)=>[...Array(9)].map((_,i)=>POOL[(k*7+i*3)%POOL.length]);
+const SPREADS=[0,1,2,3].map(k=>({l:pageOf(k*2), r:pageOf(k*2+1)}));
+
+const COL={"01-harper-baserc.jpg": "#848285", "02-cole-auto-ref.jpg": "#a9a794", "03-harper-purple.jpg": "#c0b9ca", "04-durant-rookie.jpg": "#94887c", "05-nash-1957-fix.jpg": "#856f6a", "06-jones-blue-wave.jpg": "#647598", "07-judge-bdpp19.jpg": "#9fa1a6", "08-crosby-victory.jpg": "#6c625a", "09-CTRL-mcgaffigan.jpg": "#84797f", "10-CTRL-schaefer.jpg": "#c0b277", "loc-01.jpg": "#e2d7c9", "loc-02.jpg": "#ece2d5", "loc-03.jpg": "#ebded0", "loc-04.jpg": "#eaded1", "loc-05.jpg": "#ece1d3", "loc-06.jpg": "#ebe0d2", "loc-07.jpg": "#e9dfd2", "loc-08.jpg": "#ebe1d5", "loc-09.jpg": "#f1e7db", "loc-10.jpg": "#d4c9b2", "loc-11.jpg": "#bcb4a1", "loc-12.jpg": "#c4bdad"};
+let U=0;
+let HOLD=false;
+const pocket=c=>`<div class="pk filled"><div class="well"></div>
+  <div class="card" style="background:${COL[c.f]||'#171A1F'}">${HOLD?"":`<img src="img/${c.f}" alt="" loading="eager">`}</div>
+  <div class="mouth"></div><div class="lip"></div></div>`;
+const emptyPocket=()=>`<div class="pk empty"><div class="well"></div><div class="mouth"></div></div>`;
+const pageHTML=(cards,side,{bare=false}={})=>`<div class="page ${side==="l"?"lft":""}">
+  <div class="grid">${cards.map(c=>bare?emptyPocket():pocket(c)).join("")}</div>
+  <div class="sheet-sheen"><i></i></div></div>`;
+
+const ST={};   // per-stage state: which spread we are on, and how it is dressed
+
+function render(id){
+  const st=ST[id], cur=SPREADS[st.idx], nxt=SPREADS[st.idx+1]||SPREADS[0];
+  const host=document.getElementById(id);
+  host.innerHTML=
+   `<div class="frame"><div class="board"></div>
+      <div class="stage">
+        <div class="spread">
+          <div class="slot lslot">${pageHTML(cur.l,"l")}</div>
+          <div class="spine"></div>
+          <div class="slot rslot">${pageHTML(nxt.r,"r")}</div>
+        </div>
+        <div class="leaf" hidden>
+          <div class="face fr">${pageHTML(cur.r,"r")}<div class="shade"></div></div>
+          <div class="face bk">${st.blankBack
+            ? '<div class="blank"></div>'
+            : pageHTML(nxt.l,"l",{bare:st.bare})}<div class="shade"></div></div>
+        </div>
+      </div></div>`;
+  // the right slot holds the NEXT spread's right page, because that is what the lifting
+  // leaf uncovers. Until a turn starts it must be hidden by the leaf sitting flat on it.
+  const stg=host.querySelector(".stage");
+  const rs=stg.querySelector(".rslot"), leaf=stg.querySelector(".leaf");
+  const b=rs.getBoundingClientRect(), sb=stg.getBoundingClientRect();
+  leaf.style.left=(b.left-sb.left)+"px";
+  leaf.style.width=b.width+"px"; leaf.style.height=b.height+"px";
+  stg.querySelectorAll(".leaf .face").forEach(f=>{
+    f.style.width=b.width+"px"; f.style.height=b.height+"px";});
+  leaf.hidden=false; leaf.style.transform="rotateY(0deg)";
+  stg.querySelector(".leaf .bk .shade")?.style.setProperty("opacity",".55");
+  return stg;
+}
+const stage=(id,opts={})=>{ ST[id]={idx:0,...opts}; return render(id); };
+
+const DUR=()=>+document.documentElement.style.getPropertyValue("--durms")||420;
+const EASE="cubic-bezier(.34,.03,.25,1)";
+
+// frame instrumentation: rAF deltas across the whole animation
+function record(ms){
+  return new Promise(res=>{
+    const d=[]; let last=performance.now(); const t0=last;
+    (function tick(t){ d.push(t-last); last=t;
+      if(t-t0 < ms+90) requestAnimationFrame(tick); else res(d.slice(3)); })(last);
+  });
+}
+const stats=d=>({worst:+Math.max(...d).toFixed(1), over:d.filter(x=>x>12.45).length, n:d.length});
+
+function bounce(id){
+  const st=document.getElementById(id).querySelector(".stage");
+  st.querySelector(".spread").animate(
+    [{transform:"translateX(0)"},{transform:"translateX(9px)"},{transform:"translateX(0)"}],
+    {duration:200,easing:"ease-out"});
+  return {worst:0,over:0,n:0,refused:true};
+}
+
+async function turn(id,mode,dir=1){
+  const state=ST[id];
+  if(dir<0 && state.idx===0) return bounce(id);
+  if(dir>0 && state.idx>=SPREADS.length-2) return bounce(id);
+  const st=document.getElementById(id).querySelector(".stage");
+  const dur=DUR();
+  const rec=record(dur);
+  const advance=()=>{ state.idx=Math.max(0,Math.min(SPREADS.length-2,
+                        state.idx+(dir>0?1:-1))); render(id); };
+  if(mode==="fade"){
+    st.querySelector(".leaf").hidden=true;
+    const sp=st.querySelector(".spread");
+    sp.classList.add("fade");
+    sp.animate([{opacity:1},{opacity:0,offset:.5},{opacity:1}],
+      {duration:dur,easing:"ease-in-out"});
+    setTimeout(()=>{ advance();
+      document.getElementById(id).querySelector(".leaf").hidden=true; }, dur/2);
+  } else {
+    const leaf=st.querySelector(".leaf");
+    leaf.hidden=false;
+    const from=dir>0?0:-180, to=dir>0?-180:0;
+    leaf.animate([{transform:`rotateY(${from}deg)`},{transform:`rotateY(${to}deg)`}],
+      {duration:dur,easing:EASE,fill:"forwards"});
+    // the leaf swings away from the light and back, so its faces change luminance through
+    // the arc instead of carrying a painted highlight
+    st.querySelectorAll(".leaf .shade").forEach((sh,i)=>{
+      const a=dir>0?[0,.42,.55]:[.55,.42,0];
+      sh.animate(i===0?[{opacity:a[0]},{opacity:a[1],offset:.5},{opacity:a[2]}]
+                      :[{opacity:a[2]},{opacity:a[1],offset:.5},{opacity:a[0]}],
+        {duration:dur,easing:"ease-in-out",fill:"forwards"});
+    });
+    st.querySelectorAll(".leaf .sheet-sheen i").forEach(band=>{
+      band.animate([{transform:`translateX(${dir>0?0:-38}%)`},
+                    {transform:`translateX(${dir>0?-38:0}%)`}],
+        {duration:dur,easing:"ease-in-out",fill:"forwards"});
+    });
+    if(mode==="fill"){
+      setTimeout(()=>{ st.querySelectorAll(".leaf .bk .pk").forEach(pk=>
+        pk.animate([{opacity:.3},{opacity:1}],{duration:180})); }, dur*0.72);
+    }
+    setTimeout(advance, dur+30);
+  }
+  const d=await rec; return stats(d);
+}
+const MODES={t1:"fade",t2:"flip",t3:"flip",t4:"fill"};
+stage("t1"); stage("t2",{blankBack:true}); stage("t3"); stage("t4",{bare:true});
+stage("tend");
+
+const show=(el,s)=>{document.getElementById(el).innerHTML= s.refused
+  ? "nothing to turn — the spread resists and returns"
+  : `worst frame <b>${s.worst.toFixed(1)} ms</b> &nbsp;·&nbsp; idle cadence on this display
+     is 8.3 ms median, 9.4 ms worst — compare against that, not against 8.33`;};
+
+document.querySelectorAll("[data-hold]").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("[data-hold]").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); HOLD=b.dataset.hold==="1";
+  Object.keys(ST).forEach(id=>render(id));
+});
+document.querySelectorAll("[data-dur]").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("[data-dur]").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");
+  document.documentElement.style.setProperty("--durms",b.dataset.dur);
+});
+document.documentElement.style.setProperty("--durms","420");
+document.querySelectorAll("[data-go]").forEach(b=>b.onclick=async()=>{
+  const id=b.dataset.go; show("r-"+id,await turn(id,MODES[id],1));});
+document.querySelectorAll("[data-back]").forEach(b=>b.onclick=async()=>{
+  const id=b.dataset.back; show("r-"+id,await turn(id,MODES[id],-1));});
+
+document.querySelector("[data-endtest]").onclick=()=>{
+  const st=document.getElementById("tend").querySelector(".stage");
+  st.querySelector(".spread").animate(
+    [{transform:"translateX(0)"},{transform:"translateX(9px)"},{transform:"translateX(0)"}],
+    {duration:200,easing:"ease-out"});
+  document.getElementById("r-end").innerHTML=
+    "nothing to turn — the spread resists and returns";
+};
+
+window.__runAll = async (turns=5)=>{
+  const out=[];
+  for(const id of ["t1","t2","t3","t4"]){
+    let worst=0, over=0, n=0;
+    for(let i=0;i<turns;i++){
+      const s=await turn(id,MODES[id], i%2? -1:1);
+      worst=Math.max(worst,s.worst); over+=s.over; n+=s.n;
+      await new Promise(r=>setTimeout(r,120));
+    }
+    out.push({id,worst:+worst.toFixed(1),over,n});
+  }
+  const NAME={t1:"T1 cross-fade",t2:"T2 blank back",t3:"T3 double-sided, cards ride",
+              t4:"T4 empty then fill"};
+  document.getElementById("meas").innerHTML=
+   `<table><tr><th>variant</th><th>worst frame</th><th>over 8.33 ms</th><th>frames</th></tr>`+
+   out.map(o=>`<tr><td>${NAME[o.id]}</td>
+     <td class="n ${o.worst>8.33?"bad":""}">${o.worst.toFixed(1)} ms</td>
+     <td class="n ${o.over?"bad":""}">${o.over}</td><td class="n">${o.n}</td></tr>`).join("")+
+   `</table><p class="cap">Worst single frame across ${turns} turns each, at
+    ${DUR()} ms. Budget is 8.33 ms at 120 Hz.</p>`;
+  document.getElementById("r-all").textContent="done";
+  return out;
+};
+document.querySelector("[data-runall]").onclick=()=>window.__runAll(5);
+</script>
+</body></html>

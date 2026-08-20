@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Round 1 — the card</title>
+<style>
+:root{
+  /* ---- given palette. contrast ratios measured, not estimated ---- */
+  --desk:   #1A1D21;   /* surface the card sits on */
+  --binder: #0D0F12;   /* nylon body, darker than desk */
+  --page:   #171A1F;   /* page insert */
+  --ink:    #E8E4DC;   /* warm off-white — 13.34:1 on desk, 13.76:1 on page (AAA) */
+  --ledger: #A8845C;   /* muted brass — 4.93:1 on desk, 5.08:1 on page (AA normal, NOT AAA) */
+
+  /* ---- added. see notes at the foot of the page ---- */
+  --ink-dim:#9A968E;   /* secondary label text — 5.74:1 on desk, 5.92:1 on page (AA) */
+  --mat:    #20242A;   /* variant D mat surface — 1.09:1 vs desk. surface separation, never text */
+  --hair:   #2E333A;   /* hairline — 1.33:1 vs desk. decorative edge, never text */
+
+  --card-w: 150px;     /* THE constraint. do not scale up. */
+  --card-h: 210px;     /* 150/210 = 0.714 = 2.5x3.5 */
+  --radius: 2px;       /* a real card corner, not a UI corner */
+
+  --cond: "Avenir Next Condensed","HelveticaNeue-CondensedBold","Roboto Condensed",
+          ui-sans-serif,system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--desk);color:var(--ink);
+  font-family:ui-sans-serif,system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:34px 30px 90px}
+
+h1{font:600 20px/1.2 var(--cond);letter-spacing:.10em;text-transform:uppercase;margin:0 0 6px}
+.sub{color:var(--ink-dim);font-size:13px;line-height:1.55;margin:0 0 22px;max-width:62ch}
+.calib{display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--page);
+  border-radius:3px;margin:0 0 40px;font-size:11.5px;color:var(--ink-dim);max-width:640px}
+.calib .bar{width:150px;height:8px;background:var(--ledger);border-radius:1px;flex:none}
+.calib b{color:var(--ink);font-weight:600}
+
+section{margin:0 0 78px;padding:0 0 6px}
+h2{font:600 15px/1.2 var(--cond);letter-spacing:.13em;text-transform:uppercase;
+  margin:0 0 6px;color:var(--ink)}
+h2 .tag{color:var(--ledger);margin-right:9px}
+.arg{color:var(--ink-dim);font-size:12.5px;line-height:1.6;margin:0 0 24px;max-width:70ch}
+.lab{font:600 9.5px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-dim);margin:0 0 13px}
+
+.single{margin:0 0 34px}
+/* identical loose group for every variant, so only the TREATMENT differs.
+   uneven gaps + slight vertical stagger. no rotation — a rotated card reads as
+   decoration and this round is about what the interface adds. */
+.group{display:flex;flex-wrap:wrap;align-items:flex-start;gap:26px 22px;max-width:900px}
+.group>*:nth-child(2){margin-top:11px}
+.group>*:nth-child(3){margin-top:-5px}
+.group>*:nth-child(5){margin-top:14px}
+.group>*:nth-child(6){margin-top:4px}
+.group>*:nth-child(8){margin-top:-7px}
+.group>*:nth-child(9){margin-top:9px}
+
+/* ============ A — BARE ============ */
+.card{width:var(--card-w);height:var(--card-h);border-radius:var(--radius);
+  position:relative;flex:none;
+  /* light from upper left, so the shadow falls down and slightly right.
+     three stops: contact, near, ambient. */
+  box-shadow:0 1px 1px rgba(0,0,0,.50), 0 4px 9px rgba(0,0,0,.42), 0 11px 26px rgba(0,0,0,.30)}
+.card img{width:100%;height:100%;object-fit:cover;display:block;border-radius:var(--radius)}
+
+/* ============ B — BARE + REVEAL ON HOVER ============ */
+.b-wrap{position:relative;flex:none;width:var(--card-w)}
+.b-reveal{position:absolute;left:0;right:0;bottom:0;border-radius:0 0 var(--radius) var(--radius);
+  padding:6px 7px 5px;opacity:0;transition:opacity .13s ease;pointer-events:none;
+  background:linear-gradient(to top,rgba(6,7,9,.93) 0%,rgba(6,7,9,.80) 62%,rgba(6,7,9,0) 100%)}
+.b-wrap:hover .b-reveal,.b-wrap.is-hover .b-reveal{opacity:1}
+.b-reveal .n{font:600 9px/1.15 var(--cond);letter-spacing:.09em;text-transform:uppercase;color:var(--ink)}
+.b-reveal .m{font:500 6.5px/1.3 var(--cond);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ledger);font-variant-numeric:tabular-nums;margin-top:1px}
+.pair{display:flex;gap:52px;align-items:flex-start}
+.pair .cap{font:600 9px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-dim);margin:11px 0 0}
+
+/* ============ C — BARE + CAPTION BELOW ============ */
+.c-wrap{width:var(--card-w);flex:none}
+.c-cap{margin-top:8px;padding-left:1px}
+.c-cap .n{font:600 9px/1.2 var(--cond);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c-cap .m{font:500 6.5px/1.35 var(--cond);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-dim);font-variant-numeric:tabular-nums;display:block;margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ============ D — FRAMED + LABELLED ============ */
+/* built sympathetically: a real mat with a hairline, a proper caption rail,
+   badges as quiet outlines rather than coloured chips. */
+.d-wrap{width:calc(var(--card-w) + 20px);flex:none;background:var(--mat);
+  border:1px solid var(--hair);border-radius:3px;padding:10px 10px 8px;
+  box-shadow:0 1px 1px rgba(0,0,0,.45), 0 6px 16px rgba(0,0,0,.34)}
+.d-wrap .card{box-shadow:0 1px 2px rgba(0,0,0,.55)}
+.d-rail{margin-top:9px;padding-top:7px;border-top:1px solid var(--hair)}
+.d-rail .n{font:600 9px/1.2 var(--cond);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.d-rail .m{font:500 6.5px/1.35 var(--cond);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-dim);font-variant-numeric:tabular-nums;display:block;margin-top:2px}
+.d-badges{display:flex;gap:4px;margin-top:6px;min-height:11px}
+.badge{font:600 6.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ledger);border:1px solid var(--ledger);border-radius:1px;padding:2px 3px 1px;
+  font-variant-numeric:tabular-nums;opacity:.92}
+
+.notes{margin-top:70px;padding-top:26px;border-top:1px solid var(--hair);
+  color:var(--ink-dim);font-size:12px;line-height:1.65;max-width:74ch}
+.notes h3{font:600 11px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink);margin:0 0 10px}
+.notes code{color:var(--ledger);font-size:11px}
+.notes li{margin-bottom:7px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Round 1 — the card</h1>
+<p class="sub">Nine real card scans, with their real flaws. Four proposals for what the
+interface adds around one. Every card is <b style="color:var(--ink)">150 × 210 CSS px</b> —
+the production size. The single and the group answer different questions: the single asks
+whether the treatment competes with the card, the group asks whether nine unlike cards read
+as a collection or as noise.</p>
+
+<div class="calib">
+  <span class="bar"></span>
+  <span>This bar is <b>150 px</b> — exactly one card wide. If it does not match the cards
+  below, your browser zoom is not at 100% and you are not judging true size.</span>
+</div>
+
+<!-- ================= A ================= -->
+<section id="sec-a">
+  <h2><span class="tag">A</span>Bare</h2>
+  <p class="arg">Soft shadow to sit it in space, 2px corner radius matching a real card corner.
+  Nothing else. The argument: Topps and Panini already solved the border, nameplate and
+  typography, and at 150px there is no room to add anything that would not compete.</p>
+  <p class="lab">One card, true size</p>
+  <div class="single" id="single-a"></div>
+  <p class="lab">All nine</p>
+  <div class="group" id="group-a"></div>
+</section>
+
+<!-- ================= B ================= -->
+<section id="sec-b">
+  <h2><span class="tag">B</span>Bare, with reveal</h2>
+  <p class="arg">Identical to A at rest. On hover, minimal identification fades in over the
+  foot of the card. Rest and hover are shown side by side below so the cost can be compared
+  directly. Tests whether identification-on-demand solves A's problem for free.</p>
+  <p class="lab">Rest and hover, true size</p>
+  <div class="single pair" id="single-b"></div>
+  <p class="lab">All nine — at rest. Hover any card.</p>
+  <div class="group" id="group-b"></div>
+</section>
+
+<!-- ================= C ================= -->
+<section id="sec-c">
+  <h2><span class="tag">C</span>Bare, with a caption below</h2>
+  <p class="arg">The card is untouched. A small label sits below it, outside its boundary,
+  never on the artwork — the way a written label sits under a specimen. Tests whether
+  adjacent information avoids competing with the card.</p>
+  <p class="lab">One card, true size</p>
+  <div class="single" id="single-c"></div>
+  <p class="lab">All nine</p>
+  <div class="group" id="group-c"></div>
+</section>
+
+<!-- ================= D ================= -->
+<section id="sec-d">
+  <h2><span class="tag">D</span>Framed and labelled</h2>
+  <p class="arg">The maximalist, built sympathetically rather than as a straw man: a real mat
+  with a hairline edge, a caption rail divided by a rule, and badges as quiet brass outlines
+  rather than coloured chips. Every card gets the same frame, so the page is consistent. This
+  is the direct test of whether harmonising the cards flattens what makes a collection
+  interesting.</p>
+  <p class="lab">One card, true size</p>
+  <div class="single" id="single-d"></div>
+  <p class="lab">All nine</p>
+  <div class="group" id="group-d"></div>
+</section>
+
+<div class="notes">
+  <h3>Colour, type and what I changed</h3>
+  <ul>
+    <li><code>--ink #E8E4DC</code> on desk <b>13.34:1</b>, on page <b>13.76:1</b> — AAA.</li>
+    <li><code>--ledger #A8845C</code> on desk <b>4.93:1</b> — passes AA for normal text, fails
+      AAA, and fails AA outright if used at small sizes as the only carrier of meaning. Kept
+      for badges and the metadata line in B, where it is redundant with the card itself.</li>
+    <li><b>Added <code>--ink-dim #9A968E</code></b> (desk <b>5.74:1</b>, page <b>5.92:1</b>).
+      The brief's secondary colour was <code>--ledger</code>, but brass on graphite at 6.5px
+      was doing two jobs — hierarchy and accent — and losing both. A neutral dim grey carries
+      hierarchy; brass is now reserved for things that are actually about the collection
+      (badges, serials).</li>
+    <li><b>Added <code>--mat #20242A</code></b> (1.09:1 vs desk) and <code>--hair #2E333A</code>
+      (1.33:1). Surfaces and edges only, never text — those ratios are far below any text
+      threshold and are recorded so nobody later mistakes them for text colours.</li>
+    <li><b>Type as specified</b> — condensed uppercase, wide tracking, tabular figures, player
+      at 9px and secondary at 6.5px. See the written report for what 6.5px actually does at
+      this size; it is the one part of the brief I would change.</li>
+  </ul>
+</div>
+
+</div>
+
+<script>
+// Nine real cards. Metadata is honest about what the sourcing spike could and
+// could not verify — see binder-round1-images/MANIFEST.json.
+const CARDS = [
+  {f:"02-cole-auto-ref.jpg",   n:"Gerrit Cole",     y:"2012", s:"Bowman Chrome", b:["AUTO","/500"]},
+  {f:"03-harper-purple.jpg",   n:"Bryce Harper",    y:"2011", s:"Bowman Chrome", b:["AUTO"]},
+  {f:"04-durant-rookie.jpg",   n:"Kevin Durant",    y:"2007", s:"Topps",         b:["RC"]},
+  {f:"05-nash-1957.jpg",       n:"Steve Nash",      y:"2007", s:"Topps Chrome",  b:[]},
+  {f:"06-jones-blue-wave.jpg", n:"Daniel Jones",    y:"2023", s:"Prizm",         b:["/199"]},
+  {f:"07-judge-bdpp19.jpg",    n:"Aaron Judge",     y:"2013", s:"Bowman Chrome", b:[]},
+  {f:"08-crosby-victory.jpg",  n:"Sidney Crosby",   y:"2006", s:"UD Victory",    b:[]},
+  {f:"09-CTRL-mcgaffigan.jpg", n:"Andy McGaffigan", y:"1988", s:"Topps",         b:[]},
+  {f:"10-CTRL-schaefer.jpg",   n:"Jeff Schaefer",   y:"1991", s:"Fleer",         b:["AUTO"]},
+];
+const SINGLE = 3; // 05-nash — light-bordered, chrome, upscaled and soft. the hard case.
+
+const bare = c => `<div class="card"><img src="img/${c.f}" alt=""></div>`;
+const meta = c => `${c.y} &middot; ${c.s}`;
+
+const varB = (c, forced) => `<div class="b-wrap${forced?' is-hover':''}">
+  <div class="card"><img src="img/${c.f}" alt=""></div>
+  <div class="b-reveal"><div class="n">${c.n}</div><div class="m">${meta(c)}</div></div></div>`;
+
+const varC = c => `<div class="c-wrap"><div class="card"><img src="img/${c.f}" alt=""></div>
+  <div class="c-cap"><span class="n">${c.n}</span><span class="m">${meta(c)}</span></div></div>`;
+
+const varD = c => `<div class="d-wrap"><div class="card"><img src="img/${c.f}" alt=""></div>
+  <div class="d-rail"><span class="n">${c.n}</span><span class="m">${meta(c)}</span>
+  <div class="d-badges">${c.b.map(x=>`<span class="badge">${x}</span>`).join("")}</div></div></div>`;
+
+const fill = (id, html) => document.getElementById(id).innerHTML = html;
+const all  = fn => CARDS.map(fn).join("");
+
+fill("single-a", bare(CARDS[SINGLE]));
+fill("group-a",  all(bare));
+fill("single-b", `<div><div>${varB(CARDS[SINGLE],false)}</div><p class="cap">At rest</p></div>
+                  <div><div>${varB(CARDS[SINGLE],true)}</div><p class="cap">Hover</p></div>`);
+fill("group-b",  all(c=>varB(c,false)));
+fill("single-c", varC(CARDS[SINGLE]));
+fill("group-c",  all(varC));
+fill("single-d", varD(CARDS[SINGLE]));
+fill("group-d",  all(varD));
+</script>
+</body>
+</html>

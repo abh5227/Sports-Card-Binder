@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Round 1c — real set names in the scrim</title>
+<style>
+:root{
+  --desk:#1A1D21; --binder:#0D0F12; --page:#171A1F;
+  --ink:#E8E4DC;      /* 13.34:1 on desk — AAA */
+  --ledger:#A8845C;   /* 4.93:1 on desk — AA. serials only */
+  --ink-dim:#9A968E;  /* 5.74:1 on desk — AA. hierarchy */
+  --hair:#2E333A;
+  --scrim:rgba(8,9,11,.90);
+  --scrim-edge:rgba(232,228,220,.18);   /* NEW — the scrim's own top hairline */
+  --card-w:150px; --card-h:210px; --radius:2px;
+  --cond:"Avenir Next Condensed","HelveticaNeue-CondensedBold","Roboto Condensed",
+         ui-sans-serif,system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--desk);color:var(--ink);
+  font-family:ui-sans-serif,system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:34px 30px 90px}
+h1{font:600 20px/1.2 var(--cond);letter-spacing:.10em;text-transform:uppercase;margin:0 0 6px}
+.sub{color:var(--ink-dim);font-size:13px;line-height:1.55;margin:0 0 22px;max-width:66ch}
+h2{font:600 14px/1.2 var(--cond);letter-spacing:.13em;text-transform:uppercase;margin:44px 0 6px}
+.arg{color:var(--ink-dim);font-size:12.5px;line-height:1.6;margin:0 0 20px;max-width:74ch}
+.lab{font:600 9.5px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-dim);margin:0 0 11px}
+.row{display:flex;gap:44px;align-items:flex-start;flex-wrap:wrap}
+.col{width:var(--card-w)}
+.cap{color:var(--ink-dim);font-size:11px;line-height:1.5;margin:11px 0 0;width:var(--card-w)}
+.cap b{color:var(--ink)}
+.calib{display:flex;align-items:center;gap:13px;padding:11px 13px;background:var(--page);
+  border-radius:3px;margin:0 0 34px;font-size:11.5px;color:var(--ink-dim);max-width:600px}
+.calib .bar{width:150px;height:7px;background:var(--ledger);border-radius:1px;flex:none}
+
+table{border-collapse:collapse;font-size:11.5px;margin:0 0 8px}
+th,td{padding:4px 14px 4px 0;text-align:left;color:var(--ink-dim)}
+th{font:600 9.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);
+  padding-bottom:7px}
+td.n{font-variant-numeric:tabular-nums;color:var(--ink)}
+
+/* ---------- the card + scrim ---------- */
+.cell{position:relative;width:var(--card-w);height:var(--card-h)}
+.card{width:100%;height:100%;border-radius:var(--radius);
+  box-shadow:0 1px 1px rgba(0,0,0,.50),0 4px 9px rgba(0,0,0,.42)}
+.card img{width:100%;height:100%;object-fit:cover;display:block;border-radius:var(--radius)}
+
+/* NEW: flat panel + top hairline, replacing the gradient.
+   A hairline on a gradient edge floats — the line has to sit on a hard edge. */
+.rv{position:absolute;left:0;right:0;bottom:0;padding:6px 8px 7px;
+  background:var(--scrim);border-top:1px solid var(--scrim-edge);
+  border-radius:0 0 var(--radius) var(--radius);pointer-events:none}
+.rv .n{font:600 9px/1.25 var(--cond);letter-spacing:.09em;text-transform:uppercase;color:var(--ink)}
+.rv .l{font:500 7.5px/1.45 var(--cond);letter-spacing:.10em;text-transform:uppercase;
+  color:var(--ink-dim);font-variant-numeric:tabular-nums}
+.rv .s{color:var(--ledger)}
+.rv .trunc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* the OLD gradient scrim, for the hairline before/after */
+.rv.old{background:linear-gradient(to top,rgba(8,9,11,.88) 0%,rgba(8,9,11,.88) 74%,rgba(8,9,11,0) 100%);
+  border-top:0}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>Round 1c — real set names in the scrim</h1>
+<p class="sub">1,210 real set names harvested across baseball, football, basketball and
+hockey, 1952–2026. The capacity question is answered by the table; the question the table
+cannot answer is whether the extremes <i>look</i> right. Both are below, at true size.
+Dark-bordered cards still dissolve into the surface — known, deferred to Round 2.</p>
+
+<div class="calib"><span class="bar"></span>
+  <span>This bar is <b style="color:var(--ink)">150 px</b> — one card wide. If it does not
+  match, your zoom is not 100%.</span></div>
+
+<table>
+  <tr><th>set-name length</th><th>n</th><th>median</th><th>p90</th><th>p95</th><th>max</th></tr>
+  <tr><td>all sets</td><td class="n">1210</td><td class="n">15</td><td class="n">27</td><td class="n">30</td><td class="n">48</td></tr>
+  <tr><td>pre-1990</td><td class="n">79</td><td class="n">5</td><td class="n">10</td><td class="n">10</td><td class="n">13</td></tr>
+  <tr><td>1990s</td><td class="n">103</td><td class="n">9</td><td class="n">16</td><td class="n">22</td><td class="n">39</td></tr>
+  <tr><td>2015 onward</td><td class="n">977</td><td class="n">17</td><td class="n">28</td><td class="n">31</td><td class="n">48</td></tr>
+  <tr><td>hockey (longest sport)</td><td class="n">304</td><td class="n">18</td><td class="n">30</td><td class="n">36</td><td class="n">48</td></tr>
+</table>
+<p class="arg"><b style="color:var(--ink)">32 characters</b> fit on one line in 134px of usable
+scrim width. <b style="color:var(--ink)">96.4%</b> of all 1,210 sets fit on one line; 44 do not.
+The very worst measures 195px — <b style="color:var(--ink)">1.46 lines, so two, never three.</b>
+No pre-1990 set needs a second line; 4.2% of 2015-onward sets do.</p>
+
+<!-- ============ 1. the extremes ============ -->
+<h2>1 — Both extremes, true size</h2>
+<p class="arg">Left to right: the shortest real case, the typical case, and the longest real
+set name in the sample. The scrim is sized to its content in every one — it is not a fixed
+box being under- or over-filled.</p>
+<div class="row" id="extremes"></div>
+
+<!-- ============ 2. wrap vs truncate ============ -->
+<h2>2 — Worst case: wrapped versus truncated</h2>
+<p class="arg">The same 48-character set name, handled two ways.</p>
+<div class="row" id="worstpair"></div>
+
+<!-- ============ 3. content-list variant ============ -->
+<h2>3 — Year and set on one line</h2>
+<p class="arg">A change the two-line case suggests: <code>1988</code> alone occupies a whole
+line for four characters. Merging year and set recovers a line on <i>every</i> card, and on
+the worst case absorbs the wrap almost entirely.</p>
+<div class="row" id="merged"></div>
+
+<!-- ============ 4. hairline ============ -->
+<h2>4 — The scrim's top hairline</h2>
+<p class="arg">Over a dark card the old gradient scrim had no boundary — dark panel on dark
+card, text floating. The fix is a flat panel with a 1px top hairline at
+<code>rgba(232,228,220,.18)</code>. The gradient had to go with it: a hairline drawn on a
+fading edge floats above nothing. This is a change to the scrim only — the card's own lit
+edge stays deferred.</p>
+<div class="row" id="hairline"></div>
+
+</div>
+<script>
+const C = {
+  vintage: {f:"09-CTRL-mcgaffigan.jpg", n:"Andy McGaffigan", y:"1988", s:"Topps",        p:null,        ser:null},
+  typical: {f:"06-jones-blue-wave.jpg", n:"Daniel Jones",    y:"2023", s:"Panini Prizm", p:"Blue Wave", ser:"/199"},
+  // longest real set name in the 1,210 (2025, hockey). Placed on a hockey card as a
+  // STRESS TEST — it is not this card's actual set.
+  worst:   {f:"08-crosby-victory.jpg",  n:"Sidney Crosby",   y:"2025",
+            s:"Upper Deck Tim Hortons Team Canada Gold Medalist", p:"Gold", ser:"/25"},
+};
+const lines = c => `<div class="l">${c.y}</div><div class="l">${c.s}</div>
+  ${c.p?`<div class="l">${c.p}</div>`:""}${c.ser?`<div class="l s">${c.ser}</div>`:""}`;
+
+const card = (c, body, cls="") => `<div class="col"><div class="cell">
+  <div class="card"><img src="img/${c.f}" alt=""></div>
+  <div class="rv ${cls}"><div class="n">${c.n}</div>${body}</div></div></div>`;
+
+const withCap = (html, cap) => html.replace("</div></div>", "</div></div>") +
+  `<p class="cap">${cap}</p>`;
+
+// 1 — extremes
+document.getElementById("extremes").innerHTML = [
+  [C.vintage, "<b>Shortest.</b> Set name 5 chars. Three lines total, no parallel, no serial."],
+  [C.typical, "<b>Typical.</b> Set name 12 chars. Five lines — the full content list."],
+  [C.worst,   "<b>Longest real set name</b> in 1,210 (48 chars, 2025 hockey). Wraps to two lines. Six lines total."],
+].map(([c,cap]) => `<div>${card(c, lines(c))}<p class="cap">${cap}</p></div>`).join("");
+
+// 2 — wrap vs truncate
+document.getElementById("worstpair").innerHTML = [
+  [`<div class="l">${C.worst.y}</div><div class="l">${C.worst.s}</div>
+    <div class="l">${C.worst.p}</div><div class="l s">${C.worst.ser}</div>`,
+   "<b>Wrapped.</b> Scrim grows by one line to fit."],
+  [`<div class="l">${C.worst.y}</div><div class="l trunc">${C.worst.s}</div>
+    <div class="l">${C.worst.p}</div><div class="l s">${C.worst.ser}</div>`,
+   "<b>Truncated.</b> Scrim height unchanged; the set name loses its tail."],
+].map(([body,cap]) => `<div>${card(C.worst, body)}<p class="cap">${cap}</p></div>`).join("");
+
+// 3 — year + set merged onto one line
+const merged = c => `<div class="l">${c.y} &middot; ${c.s}</div>
+  ${c.p?`<div class="l">${c.p}</div>`:""}${c.ser?`<div class="l s">${c.ser}</div>`:""}`;
+document.getElementById("merged").innerHTML = [
+  [C.vintage, "<b>Two lines.</b> Was three."],
+  [C.typical, "<b>Four lines.</b> Was five."],
+  [C.worst,   "<b>Five lines.</b> Was six — the merge absorbs most of the wrap."],
+].map(([c,cap]) => `<div>${card(c, merged(c))}<p class="cap">${cap}</p></div>`).join("");
+
+// 4 — hairline before/after, on the dark card that showed the problem.
+// Crosby's own real data, so the panel says what the card is.
+const CROSBY = {f:"08-crosby-victory.jpg", n:"Sidney Crosby", y:"2006",
+                s:"UD Ultimate Victory", p:null, ser:null};
+document.getElementById("hairline").innerHTML = [
+  ["old", "<b>Before.</b> Gradient scrim, no boundary. On a dark card the text floats."],
+  ["",    "<b>After.</b> Flat panel, 1px top hairline. The panel has an edge on any card."],
+].map(([cls,cap]) => `<div>${card(CROSBY, merged(CROSBY), cls)}<p class="cap">${cap}</p></div>`).join("");
+</script>
+</body></html>
