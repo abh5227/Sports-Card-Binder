@@ -11,6 +11,23 @@ decisions here were all made by looking at these exact pages.
 Start with **`locked.html`** — every settled decision from Rounds 1–5 assembled on one
 page. The others are the rounds that produced them, kept as they were judged.
 
+## A committed preview is evidence, not a mock
+
+These pages started as throwaway mocks — built from real material, judged by looking, never
+committed. **That changed the moment they were committed.**
+[`../docs/design-decisions.md`](../docs/design-decisions.md) cites them **by file and line**
+as the artifacts particular decisions were made against, so editing one in place moves what
+the record points at, in a public document, silently.
+
+> **Iterate freely before committing. After that, a preview that needs to change becomes a
+> new file.** That is why the rounds are numbered `round3-page.html`, `round3b-proportional.html`,
+> `round3c-opacity.html` rather than one file revised three times: each is the thing that was
+> looked at when a particular decision was taken.
+
+This is also why `preview/` is excluded from the formatter in `biome.json`. **The exclusion
+protects the citations, not the code style.** A formatter is only the most obvious tool with
+write access here — the same applies to a codemod, an auto-fixer, or a well-meaning edit.
+
 ## The card images are deliberately absent
 
 **Every preview will open with empty pockets, and that is intentional.**
