@@ -54,6 +54,7 @@ Three kinds, in descending order of how much weight they carry:
 | T3 — double-sided leaf, cards ride        | settled     | **Andy**    | looked, having read the counter      |
 | Turn duration — 420 ms                    | settled     | **Andy**    | looked, over runs of flips not one   |
 | Placeholder for an undecoded card         | rejected    | **Andy**    | asked when the state would occur     |
+| Owned card with no image                  | open        | **Andy**    | no treatment exists; needs a page    |
 
 ### Settled versus provisional — pending real use
 
@@ -1015,6 +1016,46 @@ not a treatment question. Agreed with Andy.
 
 **A ghost slot knows which card is missing. A tail pocket does not.** That difference is the
 whole of the labelling problem.
+
+### OPEN — a card that is owned and has no image
+
+**Waiting on: Andy, by looking, on a page rather than on a lone pocket.**
+
+The record defines exactly two pocket states, and **both of them mean not-owned**:
+
+- **ghost slots** — set-completion mode only; the slot knows which card is missing
+- **the tail** — every mode; the slot does not
+
+The implementation matches — `pk filled` and `pk empty`, nothing else. There is no third
+class, in the record or in the markup.
+
+**An owned card with no image is a third case and has no treatment.** It is not
+hypothetical: image sourcing fails, and it fails in the worst way, by returning a clean,
+correctly-proportioned image of the wrong card. Some cards will have no usable image at all.
+
+**Rendering it as an empty pocket makes the interface assert something false about the
+collection** — and it does so in the one visual language this record has explicitly
+committed to. The Round 2 decision to apply the lit sleeve to empty pockets rests on the
+claim that *"the failure mode does not exist in an empty pocket, and the two states differ
+physically"*. An owned card with no image is physically the third state: the pocket is not
+empty. Borrowing the empty treatment for it does not merely look wrong — it contradicts the
+argument that settled the empty treatment.
+
+**The live instance is already in this document, filed as something else.** The 2012 Topps
+Chrome Harper Black Refractor is recorded above under the bottom-edge limit, *"absent from
+the test set only because the scraper returned the wrong card for it"*. That note is about
+why a measurement is incomplete. It is also, unremarked, an owned card with no correct
+image — and it is the card this record names as the hardest case for the settled edge
+treatment. The measurement note stays where it is; this entry exists so the connection is
+not lost a second time.
+
+> **No treatment is proposed here, deliberately.** Every empty-pocket decision in this file
+> was wrong until it was judged on a page with some pockets filled and some not — the Round 2
+> setting had to be retuned to ~40% for exactly that reason. This is a looking question and
+> it belongs where a pocket can be seen among its neighbours.
+
+**It stops being theoretical at Stage F**, which is where cards are entered and reviewed.
+Better found now than at the hundredth card.
 
 ### Resolved at Round 3 — the unresolved bottom edge
 
