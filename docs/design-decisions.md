@@ -28,32 +28,32 @@ Three kinds, in descending order of how much weight they carry:
 - **Reasoned** — argued from principle without building. The weakest kind. This file
   contains one that was confidently wrong.
 
-| decision                                  | status      | decided by  | how                                  |
-| ----------------------------------------- | ----------- | ----------- | ------------------------------------ |
-| Bare at rest — nothing added to the card  | settled     | **Andy**    | looked, at true scale                |
-| Information on hover rather than always   | provisional | **Andy**    | looked; awaiting real use            |
-| The player name stays in the reveal       | settled     | **Andy**    | looked — overruled a measurement     |
-| Contextual near-duplicate marking: dead   | settled     | **Andy**    | ruled against both of us             |
-| Scrim over rail or side panel             | settled     | Claude Code | built all three, then looked         |
-| Area cost at the worst case               | settled     | Claude Code | built it; neither of us predicted it |
-| Set-name capacity                         | settled     | Claude Code | measured, 1,210 real names           |
-| Specular for occupied, lit for empty      | settled     | **Andy**    | looked — neither of us proposed it   |
-| The lit sleeve destroys a card's boundary | settled     | Claude Code | measured, per edge, per treatment    |
-| The card's lit edge returns, directional  | settled     | Claude Code | measured a Round 1 deferral false    |
-| The bottom edge that no well can fix      | settled     | Claude Code | built two diagnostics to find out    |
-| Tight gutter                              | settled     | **Andy**    | looked at three, full page           |
-| Empty pocket dimmed to ~40%               | settled     | **Andy**    | looked; confirmed a prediction       |
-| Jones's bottom edge is closed             | settled     | **Andy**    | looked — measurement stayed bad      |
-| Scrim keeps its 10% show-through          | settled     | **Andy**    | looked; overruled both of us         |
-| 4-pocket is 9-pocket at 2×                | settled     | **Andy**    | overruled the planner's scaling rule |
-| One sheet of plastic, not nine            | settled     | Claude Code | argued on cost; looks identical      |
-| The minimal frame, B                      | settled     | **Andy**    | looked — overruled both of us        |
-| Sheen: per-sheet, not one band across     | settled     | Claude Code | measured — then required by the turn |
-| The page turns like a book                | settled     | **Andy**    | asked for it; not proposed by us     |
-| T3 — double-sided leaf, cards ride        | settled     | **Andy**    | looked, having read the counter      |
-| Turn duration — 420 ms                    | settled     | **Andy**    | looked, over runs of flips not one   |
-| Placeholder for an undecoded card         | rejected    | the planner | Andy asked when the state would occur |
-| Owned card with no image                  | open        | **Andy** ?  | no treatment exists; needs a page    |
+| decision                                  | status      | raised by   | decided by          | how                                    |
+| ----------------------------------------- | ----------- | ----------- | ------------------- | -------------------------------------- |
+| Bare at rest — nothing added to the card  | settled     |             | **Andy**            | looked, at true scale                  |
+| Information on hover rather than always   | provisional |             | **Andy**            | looked; awaiting real use              |
+| The player name stays in the reveal       | settled     | Claude Code | **Andy**            | looked — overruled a measurement       |
+| Contextual near-duplicate marking: dead   | settled     | Claude Code | **Andy**            | ruled against both of us               |
+| Scrim over rail or side panel             | settled     |             | Claude Code         | built all three, then looked           |
+| Area cost at the worst case               | settled     | Claude Code | Claude Code         | built it; neither of us predicted it   |
+| Set-name capacity                         | settled     | Claude Code | Claude Code         | measured, 1,210 real names             |
+| Specular for occupied, lit for empty      | settled     | **Andy**    | **Andy**            | looked — neither of us proposed it     |
+| The lit sleeve destroys a card's boundary | settled     | Claude Code | Claude Code         | measured, per edge, per treatment      |
+| The card's lit edge returns, directional  | settled     | Claude Code | Claude Code         | measured a Round 1 deferral false      |
+| The bottom edge that no well can fix      | settled     | Claude Code | Claude Code         | built two diagnostics to find out      |
+| Tight gutter                              | settled     | the planner | **Andy**            | looked at three, full page             |
+| Empty pocket dimmed to ~40%               | settled     | Claude Code | **Andy**            | looked; confirmed a prediction         |
+| Jones's bottom edge is closed             | settled     | Claude Code | **Andy**            | looked — measurement stayed bad        |
+| Scrim keeps its 10% show-through          | settled     | both of us  | **Andy**            | looked; overruled both of us           |
+| 4-pocket is 9-pocket at 2×                | settled     | **Andy**    | **Andy**            | overruled the planner's scaling rule   |
+| One sheet of plastic, not nine            | settled     | **Andy**    | Claude Code         | argued on cost; looks identical        |
+| The minimal frame, B                      | settled     | the planner | **Andy**            | looked — overruled both of us          |
+| Sheen: per-sheet, not one band across     | settled     | the planner | Claude Code         | measured — then required by the turn   |
+| The page turns like a book                | settled     | **Andy**    | **Andy**            | asked for it; not proposed by us       |
+| T3 — double-sided leaf, cards ride        | settled     |             | **Andy**            | looked, having read the counter        |
+| Turn duration — 420 ms                    | settled     | Claude Code | **Andy**            | looked, over runs of flips not one     |
+| Placeholder for an undecoded card         | rejected    | **Andy**    | the planner         | the state does not occur on local disk |
+| Owned card with no image                  | open        | the planner | **Andy** (inferred) | no treatment exists; needs a page      |
 
 ### Settled versus provisional — pending real use
 
@@ -64,13 +64,37 @@ open row names who it is waiting on, so that "nobody has answered" cannot be mis
 "nobody has asked". **Rejected** means built or costed and then turned down, which
 is kept rather than deleted because the reasoning is what stops it being re-proposed.
 
-**A `?` after a name means the attribution is inferred rather than stated.** It is right on
-the evidence and nobody said it in those words. The marker exists because an inference that
-goes unmarked is reported as a fact the next time anyone reads the row.
+**`(inferred)` after a name means the attribution is right on the evidence and nobody said it
+in those words.** Not *maybe* — the distinction is between a confident reading and a quoted
+statement, not between likely and unlikely. It is spelled out rather than marked with a
+symbol because a legend stops being read, and the marker has to survive a reader who never
+reaches this paragraph. An inference that goes unmarked is a fact the next time anyone reads
+the row.
 
 **Only acts belong in this table.** A consequence that follows from a decision has no agent
 and does not get a row — *B has no page-edge stack* is a property of having chosen B, and it
 lives in the Round 4 prose where the reasoning is, not here where it would need an author.
+
+**`raised by` is a separate column from `decided by`, because they are separate acts.** The
+table originally had only the second, so every case where one party asked and another ruled
+got rounded into whoever ruled — and the rounding was invisible, because a schema that cannot
+express a distinction does not report the loss.
+
+That matters here more than the row count suggests. **This project has repeatedly turned on a
+question rather than a ruling.** *"Why can't we just make the 4 match the size it would be on
+the 9"* overturned a settled scaling rule. *"Is it easier to do specular instead of the sheet"*
+decided how the sheen is built. Neither is a decision; both changed one.
+
+**The two columns take a blank differently, and the asymmetry is the rule:**
+
+> **`decided by` is mandatory.** A row that cannot name one is not a decision and does not
+> belong in this table. **`raised by` is optional**, and a blank there means the question came
+> from a round's agenda rather than from a participant — the absence of a traceable act, not a
+> smaller version of `decided by`.
+
+**Every decision has a decider; not every decision has a raiser.** A blank under `raised by`
+is left visible rather than filled with the most plausible name — which is how the one
+correction this table has needed came to be needed.
 
 The distinction exists because **every decision in this file so far was judged on a preview of
 nine cards.** Real use means a collection of hundreds, sorted and re-sorted, over weeks. Some
