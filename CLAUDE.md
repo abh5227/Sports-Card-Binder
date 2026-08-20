@@ -455,6 +455,32 @@ same way.**
 > and that shape recurred three times in one table. The shape is the reusable part; the wrong
 > figure is not.
 
+### Two implicit dependencies, both silent until something moves
+
+Recorded together because they are the same failure at two scales: **something worked because
+of a condition nobody had written down, and nothing announced the condition until it broke.**
+
+**A tool that only runs from where it was written has an undeclared dependency.** The parity
+harness read its captures from an http server that had been started by hand in the session
+that wrote it. Moving it to `tests/visual/` surfaced that immediately — over `file://` a
+canvas taints cross-origin and the whole comparison fails. Until then the gate had been
+reporting *exact* results under conditions nobody had recorded, which is the same shape as
+work "held" somewhere unnamed, and as the preview-opening convention found living in
+machine-local memory.
+
+> **Moving a tool is a cheap test for whether it stands on its own. A gate that only works in
+> one place is not yet a gate.**
+
+**A record that cites a file by line freezes that file.** `docs/design-decisions.md` cites
+`preview/*.html` by line as the evidence for settled decisions. That makes every tool with
+write access — formatter, codemod, auto-fixer, a well-meaning hand edit — a threat to the
+citation, and **the failure is silent: the line still exists, it just says something else
+now.** Biome is excluded from `preview/` for exactly this reason, and the exclusion protects
+the citations rather than the code style.
+
+> **Before pointing a `file:line` at anything, ask what is allowed to rewrite it.** If the
+> answer is "a formatter", the citation is already stale and nobody will be told.
+
 Claude Code's part in the same incident is recorded above: the citation that triggered it
 named the wrong prompt — the right instruction, the wrong section — one commit after the
 rule requiring verifiable citations went into this file. Both failures are real and neither
