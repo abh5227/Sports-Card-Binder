@@ -217,6 +217,11 @@ Do not "fix" the warning by deleting a variable the template uses.
   `file:line`.
 - **Flag deviations, never adapt silently.** A deviation is often a correction — but it
   is only useful if it is said out loud.
+- **Open what is meant to be looked at.** This project's method is that Andy judges design at
+  true scale on his own display — so a preview that has only been *reported as a file path* has
+  not been delivered. Build it, then `open` it in the same turn, and re-open it when it changes
+  materially rather than leaving a stale tab. The same applies to anything else whose whole
+  point is being seen.
 - **Nothing personal in this repo, ever.** No database, no card images, no holdings, no
   tokens. `.gitignore` is the second line of defence; the first is not putting it here.
 
