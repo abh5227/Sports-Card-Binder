@@ -364,7 +364,18 @@ built on *"I don't remember writing it"* presented as *"it was not written."*
 **That gap is where this failed, and it is the general form.** "I have no record of it" and
 "it did not happen" are different claims, and only the first one is ever available to a
 participant working from a summary. The check that resolves it costs one request for the
-transcript, and the side that can run it is the side that was being questioned.
+transcript.
+
+**But note what that check is: asking the party under suspicion to produce the evidence.**
+It worked here because the quote was verifiable against the planner's own writing and against
+the surrounding facts, so it could be checked without trusting the party that produced it.
+That will not always be true, and "ask the accused for the record" is a weak check in general.
+
+> **The independent check is Andy.** He holds the session too, and can read the transcript
+> directly without either of us mediating it. That is the escalation path when a report and a
+> suspicion cannot be reconciled between the two of us — written down now rather than
+> improvised at the moment it is needed, because the moment it is needed is the moment
+> nobody's account can be taken on trust.
 
 Claude Code's part in the same incident is recorded above: the citation that triggered it
 named the wrong prompt — the right instruction, the wrong section — one commit after the
