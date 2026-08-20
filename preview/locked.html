@@ -41,8 +41,6 @@ button{font:600 10px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase
   padding:8px 13px;cursor:pointer}
 button:hover{background:#2E343C}
 .ctl{display:flex;gap:8px;align-items:center;margin:0 0 14px;flex-wrap:wrap}
-.ctl .lab{font:600 9.5px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;
-  color:var(--ink-dim);margin-right:4px}
 .where{font-size:11.5px;color:var(--ink-dim);font-variant-numeric:tabular-nums;margin-left:6px}
 .where b{color:var(--ink)}
 ol.checks{margin:0 0 22px;padding-left:20px;max-width:88ch}
@@ -293,7 +291,7 @@ function render(id){
   const host=document.getElementById(id);
   host.innerHTML=`<div class="frame"><div class="board"></div>
     <div class="stage"><div class="spread">
-      <div class="slot lslot">${pageHTML(cur.l,"l")}</div>
+      <div class="slot">${pageHTML(cur.l,"l")}</div>
       <div class="spine"></div>
       <div class="slot rslot">${pageHTML(nxt.r,"r")}</div>
     </div>

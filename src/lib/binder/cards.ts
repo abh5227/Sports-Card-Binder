@@ -9,7 +9,7 @@ const c = (
 	serial: string | null = null,
 ): Card => ({ f, n, year, set, parallel, serial });
 
-export const R = {
+const R = {
 	harp2: c("01-harper-baserc.jpg", "Bryce Harper", "2011", "Bowman Chrome"),
 	cole: c("02-cole-auto-ref.jpg", "Gerrit Cole", "2013", "Bowman Chrome", "Refractor", "/500"),
 	harper: c("03-harper-purple.jpg", "Bryce Harper", "2021", "Topps Chrome", "Purple"),
@@ -27,7 +27,7 @@ export const R = {
 const WORST = "Upper Deck Tim Hortons Team Canada Gold Medalist";
 
 /** Public-domain scans. The IMAGES are real; this metadata is placeholder. */
-export const L: Card[] = Array.from({ length: 12 }, (_, i) =>
+const L: Card[] = Array.from({ length: 12 }, (_, i) =>
 	c(
 		`loc-${String(i + 1).padStart(2, "0")}.jpg`,
 		"Unidentified",
@@ -45,7 +45,7 @@ function at<T>(xs: readonly T[], i: number): T {
 	if (v === undefined) throw new RangeError(`index ${i} is outside a ${xs.length}-item list`);
 	return v;
 }
-export const loc = (i: number): Card => at(L, i);
+const loc = (i: number): Card => at(L, i);
 
 const POOL: Card[] = [
 	R.jones,
