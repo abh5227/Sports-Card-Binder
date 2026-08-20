@@ -56,135 +56,144 @@ const PAIRS = [
 	{ name: "9-pocket", a: "#nine .frame", b: '[data-testid="binder-nine"] .frame' },
 	{ name: "4-pocket", a: "#four .frame", b: '[data-testid="binder-four"] .frame' },
 ];
-const b = await chromium.launch();
+// Both resources are declared before the work so the finally below can close
+// whichever exist. A gate that leaks a browser process when it fails is worst
+// exactly when it is failing most.
+let b;
+let srv;
+let fail = 1; // anything short of an explicit pass is a failure
+try {
+	b = await chromium.launch();
 
-async function capture(tag, url, sel) {
-	const p = await b.newPage({ viewport: { width: 1700, height: 1400 }, deviceScaleFactor: 1 });
-	const errs = [];
-	p.on("pageerror", (e) => errs.push(e.message));
-	await p.goto(url);
-	await p.waitForTimeout(1500);
-	const sheen = await p.evaluate((s) => {
-		const frame = document.querySelector(s);
-		const f = (e) => {
-			const r = e.getBoundingClientRect();
-			return [+r.width.toFixed(4), +r.height.toFixed(4)];
-		};
-		return [...frame.querySelectorAll(".sheet-sheen")].map((sh) => {
-			const i = sh.querySelector("i"),
-				cs = getComputedStyle(i);
-			return {
-				box: f(sh),
-				band: f(i),
-				grad: cs.backgroundImage,
-				z: getComputedStyle(sh).zIndex,
-				overflow: getComputedStyle(sh).overflow,
+	async function capture(tag, url, sel) {
+		const p = await b.newPage({ viewport: { width: 1700, height: 1400 }, deviceScaleFactor: 1 });
+		const errs = [];
+		p.on("pageerror", (e) => errs.push(e.message));
+		await p.goto(url);
+		await p.waitForTimeout(1500);
+		const sheen = await p.evaluate((s) => {
+			const frame = document.querySelector(s);
+			const f = (e) => {
+				const r = e.getBoundingClientRect();
+				return [+r.width.toFixed(4), +r.height.toFixed(4)];
 			};
-		});
-	}, sel);
-	await p.evaluate((s) => {
-		const frame = document.querySelector(s);
-		for (const e of frame.querySelectorAll(".sheet-sheen")) e.style.display = "none";
-		frame.scrollIntoView({ block: "start" });
-		const r = frame.getBoundingClientRect();
-		frame.style.marginTop = `${Math.ceil(r.y) - r.y}px`;
-	}, sel);
-	await p.waitForTimeout(250);
-	await p
-		.locator(sel)
-		.first()
-		.screenshot({ path: `${OUT}/${tag}.png` });
-	await p.close();
-	return { sheen, errs };
-}
-
-const shots = [];
-for (const pr of PAIRS) {
-	shots.push({
-		pr,
-		A: await capture(`a-${pr.name}`, `file://${REPO}/preview/locked.html`, pr.a),
-		B: await capture(`b-${pr.name}`, "http://localhost:5173/", pr.b),
-	});
-}
-
-const p = await b.newPage({ viewport: { width: 900, height: 600 } });
-// The comparison reads pixels back through a canvas, and file:// taints it
-// cross-origin, so the captures are served over http from a throwaway server.
-const srv = createServer((req, res) => {
-	const name = (req.url || "").replace(/^\//, "").split("?")[0];
-	if (!/^[\w.-]+\.png$/.test(name)) {
-		res.writeHead(404);
-		return res.end();
-	}
-	res.writeHead(200, { "Content-Type": "image/png" });
-	createReadStream(join(OUT, name)).pipe(res);
-});
-await new Promise((r) => srv.listen(0, "127.0.0.1", r));
-const PORT = srv.address().port;
-await p.goto(`http://127.0.0.1:${PORT}/`);
-let fail = 0;
-for (const { pr, A, B } of shots) {
-	const r = await p.evaluate(async (n) => {
-		const load = (u) =>
-			new Promise((res, rej) => {
-				const i = new Image();
-				i.onload = () => res(i);
-				i.onerror = rej;
-				i.src = u;
+			return [...frame.querySelectorAll(".sheet-sheen")].map((sh) => {
+				const i = sh.querySelector("i"),
+					cs = getComputedStyle(i);
+				return {
+					box: f(sh),
+					band: f(i),
+					grad: cs.backgroundImage,
+					z: getComputedStyle(sh).zIndex,
+					overflow: getComputedStyle(sh).overflow,
+				};
 			});
-		const [X, Y] = await Promise.all([load(`/a-${n}.png`), load(`/b-${n}.png`)]);
-		if (X.width !== Y.width || X.height !== Y.height)
-			return { fail: "size", a: [X.width, X.height], b: [Y.width, Y.height] };
-		const px = (d) => {
-			const c = document.createElement("canvas");
-			c.width = X.width;
-			c.height = X.height;
-			const g = c.getContext("2d", { willReadFrequently: true });
-			g.drawImage(d, 0, 0);
-			return g.getImageData(0, 0, X.width, X.height).data;
-		};
-		const da = px(X),
-			db = px(Y);
-		let n2 = 0,
-			mx = 0,
-			first = null;
-		for (let i = 0; i < da.length; i += 4) {
-			const d = Math.max(
-				Math.abs(da[i] - db[i]),
-				Math.abs(da[i + 1] - db[i + 1]),
-				Math.abs(da[i + 2] - db[i + 2]),
-			);
-			if (d > 0) {
-				n2++;
-				if (d > mx) mx = d;
-				if (!first) first = { x: (i / 4) % X.width, y: Math.floor(i / 4 / X.width), d };
-			}
-		}
-		return { w: X.width, h: X.height, total: X.width * X.height, n: n2, mx, first };
-	}, pr.name);
-	const g2ok = JSON.stringify(A.sheen) === JSON.stringify(B.sheen);
-	const g1ok = !r.fail && r.n === 0;
-	if (!g1ok || !g2ok) fail++;
-	console.log(`\n${pr.name}  ${r.w}x${r.h}`);
-	console.log(
-		`  GATE 1  pixels, sheen suppressed : ${
-			r.fail ? `SIZE MISMATCH ${JSON.stringify(r)}` : `${r.n} differing, max delta ${r.mx}`
-		}  ${g1ok ? "PASS" : "FAIL"}`,
-	);
-	if (r.first)
-		console.log(`          first difference at x${r.first.x} y${r.first.y} delta ${r.first.d}`);
-	console.log(
-		`  GATE 2  sheen box + gradient     : ${A.sheen.length} bands compared  ${g2ok ? "PASS" : "FAIL"}`,
-	);
-	if (!g2ok) {
-		console.log("    preview", JSON.stringify(A.sheen));
-		console.log("    port   ", JSON.stringify(B.sheen));
+		}, sel);
+		await p.evaluate((s) => {
+			const frame = document.querySelector(s);
+			for (const e of frame.querySelectorAll(".sheet-sheen")) e.style.display = "none";
+			frame.scrollIntoView({ block: "start" });
+			const r = frame.getBoundingClientRect();
+			frame.style.marginTop = `${Math.ceil(r.y) - r.y}px`;
+		}, sel);
+		await p.waitForTimeout(250);
+		await p
+			.locator(sel)
+			.first()
+			.screenshot({ path: `${OUT}/${tag}.png` });
+		await p.close();
+		return { sheen, errs };
 	}
-	for (const e of [...A.errs, ...B.errs]) console.log("  PAGE ERROR:", e);
+
+	const shots = [];
+	for (const pr of PAIRS) {
+		shots.push({
+			pr,
+			A: await capture(`a-${pr.name}`, `file://${REPO}/preview/locked.html`, pr.a),
+			B: await capture(`b-${pr.name}`, "http://localhost:5173/", pr.b),
+		});
+	}
+
+	const p = await b.newPage({ viewport: { width: 900, height: 600 } });
+	// The comparison reads pixels back through a canvas, and file:// taints it
+	// cross-origin, so the captures are served over http from a throwaway server.
+	srv = createServer((req, res) => {
+		const name = (req.url || "").replace(/^\//, "").split("?")[0];
+		if (!/^[\w.-]+\.png$/.test(name)) {
+			res.writeHead(404);
+			return res.end();
+		}
+		res.writeHead(200, { "Content-Type": "image/png" });
+		createReadStream(join(OUT, name)).pipe(res);
+	});
+	await new Promise((r) => srv.listen(0, "127.0.0.1", r));
+	const PORT = srv.address().port;
+	await p.goto(`http://127.0.0.1:${PORT}/`);
+	fail = 0;
+	for (const { pr, A, B } of shots) {
+		const r = await p.evaluate(async (n) => {
+			const load = (u) =>
+				new Promise((res, rej) => {
+					const i = new Image();
+					i.onload = () => res(i);
+					i.onerror = rej;
+					i.src = u;
+				});
+			const [X, Y] = await Promise.all([load(`/a-${n}.png`), load(`/b-${n}.png`)]);
+			if (X.width !== Y.width || X.height !== Y.height)
+				return { fail: "size", a: [X.width, X.height], b: [Y.width, Y.height] };
+			const px = (d) => {
+				const c = document.createElement("canvas");
+				c.width = X.width;
+				c.height = X.height;
+				const g = c.getContext("2d", { willReadFrequently: true });
+				g.drawImage(d, 0, 0);
+				return g.getImageData(0, 0, X.width, X.height).data;
+			};
+			const da = px(X),
+				db = px(Y);
+			let n2 = 0,
+				mx = 0,
+				first = null;
+			for (let i = 0; i < da.length; i += 4) {
+				const d = Math.max(
+					Math.abs(da[i] - db[i]),
+					Math.abs(da[i + 1] - db[i + 1]),
+					Math.abs(da[i + 2] - db[i + 2]),
+				);
+				if (d > 0) {
+					n2++;
+					if (d > mx) mx = d;
+					if (!first) first = { x: (i / 4) % X.width, y: Math.floor(i / 4 / X.width), d };
+				}
+			}
+			return { w: X.width, h: X.height, total: X.width * X.height, n: n2, mx, first };
+		}, pr.name);
+		const g2ok = JSON.stringify(A.sheen) === JSON.stringify(B.sheen);
+		const g1ok = !r.fail && r.n === 0;
+		if (!g1ok || !g2ok) fail++;
+		console.log(`\n${pr.name}  ${r.w}x${r.h}`);
+		console.log(
+			`  GATE 1  pixels, sheen suppressed : ${
+				r.fail ? `SIZE MISMATCH ${JSON.stringify(r)}` : `${r.n} differing, max delta ${r.mx}`
+			}  ${g1ok ? "PASS" : "FAIL"}`,
+		);
+		if (r.first)
+			console.log(`          first difference at x${r.first.x} y${r.first.y} delta ${r.first.d}`);
+		console.log(
+			`  GATE 2  sheen box + gradient     : ${A.sheen.length} bands compared  ${g2ok ? "PASS" : "FAIL"}`,
+		);
+		if (!g2ok) {
+			console.log("    preview", JSON.stringify(A.sheen));
+			console.log("    port   ", JSON.stringify(B.sheen));
+		}
+		for (const e of [...A.errs, ...B.errs]) console.log("  PAGE ERROR:", e);
+	}
+	console.log(
+		`\n${fail ? `${fail} PAIR(S) FAILED` : "ALL GATES PASS — the port reproduces the preview"}`,
+	);
+} finally {
+	await b?.close().catch(() => {});
+	srv?.close();
 }
-console.log(
-	`\n${fail ? `${fail} PAIR(S) FAILED` : "ALL GATES PASS — the port reproduces the preview"}`,
-);
-await b.close();
-srv.close();
 process.exit(fail ? 1 : 0);
