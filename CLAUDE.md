@@ -477,6 +477,38 @@ same way.**
 > and that shape recurred three times in one table. The shape is the reusable part; the wrong
 > figure is not.
 
+### Three rules for tests that defend a record
+
+**A ratio test defends a relationship; an absolute test defends a decision.** 4-pocket being
+exactly 2× the 9-pocket is a *relationship*, and asserting the ratio survives a deliberate
+change to a base value. The card at **150 × 210** is not derived from that rule — it is the
+decision that cards read at true binder scale rather than as a gallery of giant cards, and a
+ratio test passes happily on a binder of 75 × 105 cards.
+
+> **Ask what the record actually settled before choosing which to assert.** Twelve scaled
+> properties, eleven ratio assertions, one absolute — because eleven are consequences and one
+> is a decision.
+
+**A test you have not seen fail is not a test.** Break the thing each test defends, confirm
+it goes red, revert. And confirm it fails **only its own** test:
+
+> Three tests where one break reddens two are **two tests and a duplicate**. Three where a
+> break reddens none are **three pieces of decoration**.
+
+This is the control rule — *a control is only a control if it can fail* — turned on the tests
+themselves. `tests/e2e/geometry.spec.ts` was verified this way: a constant sleeve inset
+reddens the scaling test alone, `nowrap` plus `ellipsis` reddens the wrap test alone, and
+`isolation: isolate` on a pocket reddens the z-scale test alone.
+
+**Check that the test environment contains the thing being tested.** The two invariants above
+are facts about *computed* style. Vitest's node environment performs no layout and jsdom
+resolves no `calc()`, so both tests would have passed on unresolved strings — green, in an
+environment where the failure they exist to catch cannot occur.
+
+> **A green test in an environment that cannot represent the failure is worse than no test**,
+> because it reports coverage that does not exist. Before writing the assertion, ask whether
+> the runner can even produce the bug.
+
 ### Two things that look dead and are not
 
 A dead-code sweep will find both of these again. Neither is dead.
