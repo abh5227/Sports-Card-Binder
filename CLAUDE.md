@@ -363,6 +363,21 @@ than nodding along, which is the behaviour this rule exists to protect.
 > invites agreement instead of checking, which is the exact failure a diagnostic is for. Cite
 > `file:line` in this repo, or restate the substance inline.
 
+**A verify section must not predict state the prompt itself changes.** A prompt named an exact
+`HEAD` as the precondition for its push section, while an earlier section of the same prompt
+added another commit. The gate then failed on the author's arithmetic rather than on anything
+about the machine.
+
+> **Express it relationally.** *"`HEAD` is the last commit you made in this prompt;
+> `origin/main` is `<known hash>`; every commit between them is one you can account for."*
+> That is checkable without the author predicting a hash they cannot know, and the
+> accountability clause is the part that actually protects anything.
+
+> **The gate's value is that it is not interpreted.** A mismatch small enough to explain away
+> is exactly where the habit of explaining starts, and the habit is what kills the gate — not
+> any single wrong call. **Stopping on an obvious arithmetic slip is the gate working, not the
+> gate being pedantic, and the cost of that stop belongs to whoever wrote the bad verify.**
+
 **That rule has now been broken three times, each time by whoever had most recently written
 it down — so the fix is notation, not diligence.** Two forms, both mechanical.
 
