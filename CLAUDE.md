@@ -569,62 +569,87 @@ named the wrong prompt — the right instruction, the wrong section — one comm
 rule requiring verifiable citations went into this file. Both failures are real and neither
 excuses the other.
 
-## The decision log ships with this repo
+## The decision log lives here — `docs/project-log.md`
 
-**Andy's decision: the decision log becomes public.** It moves into this repository at
-Stage C and ships with the public repo.
+**Andy's decision: the decision log is public.** It migrated into this repository at Stage C
+and ships with it.
 
 **Why, and it is not sentiment.** This repository is a portfolio piece, and the log is the
-strongest artifact in it. Working code is table stakes and every candidate has some. A
-record of decisions with the alternatives that lost, positions overturned by measurement,
-and errors caught before they cost anything is the thing that is hard to fake and rare to
-find. `docs/design-decisions.md` is already that document for the visual design; the log is
-that document for the project.
+strongest artifact in it. Working code is table stakes and every candidate has some. A record
+of decisions with the alternatives that lost, positions overturned by measurement, and errors
+caught before they cost anything is the thing that is hard to fake and rare to find.
 
 **Nothing about this changes what stays out.** No database, no card images, no holdings, no
-tokens — that rule is unrelated to this one and is not relaxed by it. What ships is
-reasoning, not data.
+tokens. That rule is unrelated to this one and is not relaxed by it. What ships is reasoning,
+not data. **Andy's method document stays out and will not enter this repository.**
+
+### Which of the three documents a thing belongs in
+
+There are now three records here and they overlap. The boundary, so a future session does not
+have to re-derive it:
+
+- **`docs/design-decisions.md`** — *how* a design decision was reached. The arguments, the
+  alternatives, the measurements, and the limit of each justification.
+- **`docs/project-log.md`** — *what* a decision commits the project to, and the incidents that
+  taught the method. Consequences that bind future stages; errors, kept deliberately.
+- **`CLAUDE.md`** — what a future session must *do*. Imperative and current, carrying only as
+  much history as makes a rule stick.
+
+Two rules that decide most cases:
+
+> **The rule lives here; the incident lives in the log.** Prose may recur across the three — a
+> rule that stung is allowed to be stated twice. **A measurement that can be taken again may
+> not**, because two copies of a live number is how they come to disagree. The idle floor is
+> dated here and pointed at from the log for exactly that reason.
+
+> **A number defended by a test does not belong in the log.** The twelve scaling ratios, the
+> card at 150 × 210, the z-scale — a test asserts each and reddens if it moves. The log holds
+> the constraints no test can express: *must not be retrofitted*, *belongs on `card` not
+> `holding`*, *written in the same transaction*.
 
 ### It stays current by the mechanism that already exists
 
 Do not invent a process for this. The machinery is the one that caught the Round 4 record:
 
-- **a decision's prompt names the log update as one of its outputs**, in its own right,
-  never buried in a list of prohibitions
+- **a decision's prompt names the log update as one of its outputs**, in its own right, never
+  buried in a list of prohibitions
 - **the next prompt's verify section checks that output**, the same way it checks any other
   claimed artefact
 
-That is the whole mechanism, and it works because it makes the update a checkable claim
-rather than an intention. **"Keep it updated" as an intention is exactly what left Chef's
-Choice's `README.md` broken for six weeks** on a project run with more discipline than most
-— see the cold-start section below, which exists because of it. An intention that nobody
-verifies decays at a rate nobody notices.
+That is the whole mechanism, and it works because it makes the update a checkable claim rather
+than an intention. **"Keep it updated" as an intention is exactly what left Chef's Choice's
+README broken for six weeks** on a project run with more discipline than most — see the
+cold-start section below, which exists because of it. An intention that nobody verifies decays
+at a rate nobody notices.
 
 ### One authoritative copy, owned here
 
-Once the log is in this repository, **Claude Code owns it** and this is the only live copy.
-Any copy held elsewhere becomes a pointer to this one.
+**Claude Code owns `docs/project-log.md` and it is the only live copy.** Any copy held
+elsewhere is a pointer to this one.
 
-This is the same transition already made for `docs/design-decisions.md`, and it is made for
-the same reason: **two live copies of a decision record is how they diverge**, and the
-divergence is silent until someone acts on the stale one. A pointer cannot go stale.
+This is the same transition already made for `docs/design-decisions.md`, and for the same
+reason: **two live copies of a decision record is how they diverge**, and the divergence is
+silent until someone acts on the stale one. A pointer cannot go stale.
 
-### Three things to do before it ships — Stage C
+### Three read-throughs, done at migration — and what a later addition owes
 
-Not a rewrite. Three read-throughs, each with one specific question.
+Each was a pass with one question, and each still applies to anything added later.
 
 1. **What made sense in a private planning document and does not in a public repo.**
-   Machine-specific paths, filesystem detail, anything describing Andy's setup rather than
-   the project's decisions.
+   Machine-specific paths, filesystem detail, anything describing Andy's setup rather than the
+   project's decisions. A count of what he owns is inventory and does not go in; a card named
+   as the thing a design was judged against is provenance and does.
 2. **Every reference to material held outside this repository must be made self-contained.**
-   The log's header points at a private planning document, and several entries cite it by
-   number. A public document referencing a private one reads as a broken dependency, and it
-   also leaks the shape of the thing being kept private. Restate the principle inline at
-   each citation rather than pointing at a source no reader can open — which is the citation
-   rule above, applied to the log itself.
-3. **Anything personal that is not a decision.** The same rule as the rest of the repo,
-   applied once more at the moment of publication, because that is the last point at which
-   it is cheap.
+   Restate the principle inline; do not point at a source no reader can open. A public document
+   referencing a private one reads as a broken dependency **and leaks the shape of the thing
+   being kept private** — which is why naming the private file is itself the leak. Where a claim
+   genuinely cannot stand alone, say so rather than weakening it to something that can.
+3. **Anything personal that is not a decision.** The same rule as the rest of the repo, applied
+   once more at the moment of publication, because that is the last point at which it is cheap.
+
+> **What none of the three passes may do is remove something for being unflattering.** The log's
+> errors are the reason it is worth publishing. That instruction is written at the top of the
+> document itself so a later session does not have to infer it.
 
 ## The cold start belongs to CI
 
