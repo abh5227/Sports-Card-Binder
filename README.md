@@ -5,18 +5,21 @@
 A personal sports-card collection app, built around a single idea: **the interface should
 be a binder, not a spreadsheet.**
 
-Card images sit in pockets on a two-page spread you flip through. Pages hold 4, 9 or 12
-cards. Cards render at true binder scale — roughly 150 × 210 CSS px, the size a real card
-is when you are looking at a page of them. Clicking a card lifts it out of its pocket for
-a closer look, and turns it over.
+Card images sit in pockets on a two-page spread you flip through, one leaf at a time. Pages
+hold **9 or 4** cards. Cards render at true binder scale — 150 × 210 CSS px, the size a real
+card is when you are looking at a page of them. Hovering a card reveals its details; clicking
+it opens a fuller view. **Whether that view is also the "lift the card out and turn it over"
+gesture is deliberately undecided** — both are wanted, and which one the click belongs to is
+recorded as an open question rather than guessed at.
 
 Four sports: baseball, basketball, football, hockey. Single user, local, offline-capable,
 built to grow to a few thousand cards.
 
-> **Status: Stage B — scaffold.** The toolchain and a machine-verified cold start.
-> There is no schema, no binder UI and no card entry yet. Each stage answers one question
-> and produces one thing to look at; this one answers *"does the toolchain run end to
-> end on a clean checkout?"*
+> **Status: Stage C — the binder, built from the design record.** The two-page spread renders
+> at both layouts, with page turns, at true binder scale. It runs on fixture data: there is no
+> schema, no card entry and no persistence yet. Each stage answers one question and produces
+> one thing to look at; this one answers *"does the real stack reproduce the preview?"* —
+> checked by a gate that compares the built page against the committed preview pixel for pixel.
 
 ## Setup
 
@@ -96,17 +99,19 @@ Two choices worth explaining, because both went against the obvious answer:
   that is a constraint the type system can enforce at compile time rather than a rule
   people remember.
 - **No virtualisation, no image cache, no preload scheduler, no FLIP library.** Not an
-  oversight — measured. A cold 12-pocket spread swap costs 36.7 ms with zero dropped
-  frames at 120 Hz; explicit preloading measured ~15% *slower* than the browser's own
-  cache; 1,008 cards FLIP-animating simultaneously dropped no frames at all. The
-  architecture those layers would have justified was deleted by the measurement.
+  oversight — measured. A cold spread swap cost 36.7 ms with zero dropped frames at 120 Hz,
+  measured on a twelve-pocket layout that has since been dropped, so the real worst case is
+  smaller than that; explicit preloading measured ~15% *slower* than the browser's own cache;
+  1,008 cards FLIP-animating simultaneously dropped no frames at all. The architecture those
+  layers would have justified was deleted by the measurement.
 
 Full reasoning, and the numbers, in [CLAUDE.md](CLAUDE.md).
 
 ## Not built yet
 
-Schema and migrations · the binder UI · card entry · image sourcing and normalisation ·
-sorting and navigation · set-completion mode · price and value tracking.
+Schema and migrations · card entry · image sourcing and normalisation · sorting and
+navigation · set-completion mode · price and value tracking. The binder renders, but nothing
+behind it is real yet — it is drawing fixtures, not a collection.
 
 Physical storage — slabs, one-touch holders, "which shelf is it on" — is out of scope
 permanently. Every card renders identically in a pocket. So are trading-card games; this
