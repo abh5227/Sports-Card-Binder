@@ -384,10 +384,17 @@ it down — so the fix is notation, not diligence.** Two forms, both mechanical.
 > **A citation to another repository must be visibly not-local.** Prefix it with the project:
 > `chefs-choice:README.md:12-22`. The form carries the warning, so no prose has to supply it.
 >
-> **A cross-repo citation written in local form is the worst kind.** `app.py:449-454` fails
-> loudly here and is self-correcting. `README.md:12-22` and `CLAUDE.md:41-48` resolved in
-> *this* repo to real, plausible, wrong content and gave the reader no signal at all. **A
-> citation that fails is safer than one that misleads.**
+> **A cross-repo citation written in local form is the worst kind.** Three were: an `app.py`
+> line range, a `README.md` line range and a `CLAUDE.md` line range, each pointing at another
+> project entirely. The first failed loudly here and was self-correcting; the other two
+> resolved in *this* repo to real, plausible, wrong content and gave the reader no signal at
+> all. **A citation that fails is safer than one that misleads.**
+>
+> **Describe a bad citation form; never reproduce one.** The sentence above used to write those
+> three out verbatim as its examples, which made this file an instance of the thing it was
+> warning about — two of them resolved against this repository's own files. The decision log
+> carried the same passage and the same defect until it migrated. **A specimen and a pointer
+> are written identically, so the only safe specimen is a described one.**
 
 > **If a file cannot be frozen, do not cite it by line.** This file cited itself at `95-99`
 > and drifted to `93-94`, because the file grew above the target. A record that cites a file
@@ -398,6 +405,16 @@ it down — so the fix is notation, not diligence.** Two forms, both mechanical.
 > `preview/*.html` is the case that qualifies: committed as evidence, excluded from the
 > formatter, and correctable only where the correction cannot change what renders. Source
 > files do not qualify — they are cited by symbol or by heading, never by line.
+
+**A citation is not the only thing that rots. A reversed decision does too.**
+
+> **When a decision is reversed, sweep every document that recorded it.** A dropped decision
+> leaves residue wherever it was ever written down, and each copy is a live source for whoever
+> reads that document next. **Twelve-pocket was dropped and then found alive three times:** in
+> a superseded stage plan, in a prompt that quoted that plan as "24 slots", and in this
+> repository's public `README.md`, which told visitors that pages hold 4, 9 or 12 for as long
+> as it stood. Nobody swept. **Removal is part of reversing a decision, not a follow-up to
+> it** — the residue outlives the decision otherwise.
 
 ### Who holds the record — and it is not the side that carries the thread
 
