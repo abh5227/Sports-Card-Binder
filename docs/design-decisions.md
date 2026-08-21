@@ -54,6 +54,8 @@ Three kinds, in descending order of how much weight they carry:
 | Turn duration — 420 ms                    | settled     | Claude Code | **Andy**            | looked, over runs of flips not one     |
 | Placeholder for an undecoded card         | rejected    | **Andy**    | the planner         | the state does not occur on local disk |
 | Owned card with no image                  | open        | the planner | **Andy** (inferred) | no treatment exists; needs a page      |
+| The 40 px frame does not scale at 4-pocket | settled     | Claude Code | the planner         | reasoned; the cost that won B          |
+| The lip stays bright through the turn     | settled     | Claude Code | **Andy**            | looked twice; never noticed it         |
 
 ### Settled versus provisional — pending real use
 
@@ -750,6 +752,24 @@ governs ghost slots, arriving from the other direction — see **two kinds of em
   because the two inner margins face each other across the spine and read as a single
   space; matching the outer number there would make the middle of the spread look tight.
 
+### Resolved at Stage C — the 40 px frame does not scale at 4-pocket
+
+**The question was never asked in Round 4**, because Round 3's scaling rule predates the
+frame. Round 3 settled that *page contents* double at 4-pocket — card, inset, radius, gutter,
+margins, scrim type, hairline and lip, all by the same factor. The frame arrived a round later
+and nobody said which side of that rule it fell on. The Stage C port shipped it at **1×** and
+flagged the gap rather than deciding it silently.
+
+**Settled at 1×.** The frame does not scale; page contents do. The argument is the one that won
+Round 4 in the first place: **B beat C partly on costing only 40 px**, and a frame that doubles
+to 80 px at 4-pocket is C's frame cost arriving through the back door — on the layout where the
+page is already twice as wide. Scaling it would un-decide the variant.
+
+**Decided by reasoning, not by looking, and that is worth stating.** Andy has seen the built
+4-pocket spread with the frame at 1× and approved the assembly, but *"I like it" answers the
+whole, not the parts* — nobody was asked to compare 1× against 2× side by side. If the lighter
+frame ever reads wrong at 4-pocket, a two-variant render is the thing to build.
+
 ---
 
 ## Round 5 — the sheen, and the page turn
@@ -997,6 +1017,29 @@ slower number. The fast end won on the repetition, not on the single instance.
 > operates dozens of times an hour.
 
 **Round 5 is closed.** The sheen is Model 2, the turn is T3, the duration is 420 ms.
+
+### Resolved at Stage C — the card's lit lip stays bright through the turn
+
+**The defect, as it was argued.** The lip is a line on the card's own edge, and it sits above
+the leaf's shading pass — so a card's top-left corner holds full brightness while the page
+swings into shadow. Both the planner and Claude Code called that wrong, on the same ground: a
+physical page turning away from a light does not keep bright edges. It was present in Round 5
+and neither of us caught it there.
+
+**Andy looked across two rounds and did not notice it in use. Left as built.**
+
+> **Physical realism is this design's vocabulary, not its acceptance criterion.** The argument
+> was valid and it was pointed at the wrong criterion. This is the second time a real,
+> measurable property has been retired by his not seeing it — the first was the spine step the
+> per-sheet sheen produces, at 1.035–1.044:1, which is recorded above as explicitly not what
+> decided the sheen. **The rule is symmetric: a physically correct detail nobody perceives
+> earns nothing, and a physically incorrect one nobody perceives costs nothing.** Perception is
+> the currency.
+
+**What this does not license.** It is not general permission to ignore physics — the
+directional lip, the specular sleeve and the shallow-V sheen are all in this record *because*
+physical behaviour was modelled and then looked at. It licenses one thing: **"a real page
+wouldn't do that" is not by itself a finding.** It becomes one when someone sees it.
 
 ---
 
