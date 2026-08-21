@@ -602,8 +602,24 @@ not data. **Andy's method document stays out and will not enter this repository.
 
 ### Which of the three documents a thing belongs in
 
-There are now three records here and they overlap. The boundary, so a future session does not
-have to re-derive it:
+**Duplication is dangerous exactly where a value can change, and harmless where it cannot.**
+Three rules fall out of that, and they are one principle rather than three conventions.
+
+> - **A number a test defends lives in the test.** The twelve scaling ratios, the card at
+>   150 × 210, the z-scale — a spec reddens if any of them moves, so a second copy in prose is
+>   an unguarded transcription of a guarded fact.
+> - **A number that can be taken again lives in one place.** The idle floor is re-measured
+>   every time something is timed. Two copies of it is how they come to disagree.
+> - **A number frozen by being historical can be told wherever the story is told.** The
+>   over-budget count, the phantom frame, the pixel-difference percentage, the scroll offset —
+>   all permanently-fixed wrong readings that will never be taken again, so they cannot drift
+>   apart. They are part of an incident, and an incident is told where it teaches.
+
+The same principle sorts prose, where it is looser, because prose cannot silently disagree
+with itself the way two numbers can: **a rule that stung is allowed to be stated twice.**
+
+There are now three records in this repository and they overlap. Where each kind of thing
+goes:
 
 - **`docs/design-decisions.md`** — *how* a design decision was reached. The arguments, the
   alternatives, the measurements, and the limit of each justification.
@@ -612,17 +628,13 @@ have to re-derive it:
 - **`CLAUDE.md`** — what a future session must *do*. Imperative and current, carrying only as
   much history as makes a rule stick.
 
-Two rules that decide most cases:
+> **The rule lives here; the incident lives in the log.** That is the whole split for anything
+> the three documents describe in common, and it is why the log holds the false report while
+> this file holds *stat a file before reporting it written*.
 
-> **The rule lives here; the incident lives in the log.** Prose may recur across the three — a
-> rule that stung is allowed to be stated twice. **A measurement that can be taken again may
-> not**, because two copies of a live number is how they come to disagree. The idle floor is
-> dated here and pointed at from the log for exactly that reason.
-
-> **A number defended by a test does not belong in the log.** The twelve scaling ratios, the
-> card at 150 × 210, the z-scale — a test asserts each and reddens if it moves. The log holds
-> the constraints no test can express: *must not be retrofitted*, *belongs on `card` not
-> `holding`*, *written in the same transaction*.
+> **What a decision commits us to is not the same as what a test can check.** The log holds the
+> constraints no test can express — *must not be retrofitted*, *belongs on `card` not
+> `holding`*, *written in the same transaction*. Those are the entries that earn their place.
 
 ### It stays current by the mechanism that already exists
 
