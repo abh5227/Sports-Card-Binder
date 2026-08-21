@@ -21,6 +21,14 @@ built to grow to a few thousand cards.
 > one thing to look at; this one answers *"does the real stack reproduce the preview?"* —
 > checked by a gate that compares the built page against the committed preview pixel for pixel.
 
+## How this was decided
+
+[docs/project-log.md](docs/project-log.md) records the decisions with the alternatives that
+lost, the positions overturned by measurement, and the mistakes caught before they cost
+anything — including our own, kept deliberately.
+[docs/design-decisions.md](docs/design-decisions.md) is the same thing for the visual design,
+in depth.
+
 ## Setup
 
 Requires **Node 24 or newer** (`better-sqlite3` needs ≥22; Node 20 is past end of life).
